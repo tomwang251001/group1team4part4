@@ -34,6 +34,10 @@ public class HomeController implements Initializable {
     public JFXComboBox genreComboBox;
 
     @FXML
+    public JFXComboBox releaseYearComboBox;
+    @FXML
+    public JFXComboBox ratingComboBox;
+    @FXML
     public JFXButton sortBtn;
 
     public List<Movie> allMovies;
@@ -63,6 +67,15 @@ public class HomeController implements Initializable {
         genreComboBox.getItems().add("No filter");  // add "no filter" to the combobox
         genreComboBox.getItems().addAll(genres);    // add all genres to the combobox
         genreComboBox.setPromptText("Filter by Genre");
+
+        releaseYearComboBox.getItems().add("No Filter");
+        //releaseYearComboBox.getItems().add();
+        releaseYearComboBox.setPromptText("Filter by Releaseyear");
+
+        ratingComboBox.getItems().add("No Filter");
+
+        ratingComboBox.setPromptText("Filter by Releaseyear");
+
     }
 
     public void sortMovies(){
@@ -139,5 +152,25 @@ public class HomeController implements Initializable {
 
     public void sortBtnClicked(ActionEvent actionEvent) {
         sortMovies();
+    }
+
+    String getMostPopularActor(List<Movie> movies){
+
+        return "Movie";
+    }
+
+    int getLongestMovieTitle(List<Movie> movies){
+
+        return 1;
+    }
+
+    long countMoviesFrom(List<Movie> movies, String director){
+
+        return 1L;
+    }
+
+    List<Movie> getMoviesBetweenYears(List<Movie> movies, int startYear, int endYear){
+
+        return movies;
     }
 }
