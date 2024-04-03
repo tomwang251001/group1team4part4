@@ -8,11 +8,31 @@ public class Movie {
     private final String title;
     private final String description;
     private final List<Genre> genres;
+    private  int id;
+    private  int releaseYear;
+    private String imgUrl;
+    private  int lengthInMinutes;
+    private String[] directors;
+    private  String[] writers;
+    private String[] mainCast;
 
     public Movie(String title, String description, List<Genre> genres) {
         this.title = title;
         this.description = description;
         this.genres = genres;
+    }
+    public Movie(int id, String title, List<Genre> genres, int releaseYear, String description, String imgUrl, int lengthInMinutes, String[] directors, String[]writers, String[] mainCast, double rating) {
+        this.id = id;
+        this.title = title;
+        this.genres = genres;
+        this.releaseYear = releaseYear;
+        this.description = description;
+        this.imgUrl = imgUrl;
+        this.lengthInMinutes = lengthInMinutes;
+        this.directors = directors;
+        this.writers = writers;
+        this.mainCast = mainCast;
+        this.rating = rating;
     }
 
     @Override
@@ -66,4 +86,37 @@ public class Movie {
 
         return movies;
     }
+
+    public int getId() {
+        return id;
+    }
+    public int getReleaseYear() {
+        return releaseYear;
+    }
+
+    public String getImgUrl() {
+        return imgUrl;
+    }
+
+    public int getLengthInMinutes() {
+        return lengthInMinutes;
+    }
+
+    public String[] getDirectors() {
+        return directors;
+    }
+
+    public String[] getWriters() {
+        return writers;
+    }
+
+    public String[] getMainCast() {
+        return mainCast;
+    }
+
+    public double getRating() {
+        return rating;
+    }
+
+    private double rating;
 }
