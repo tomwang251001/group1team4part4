@@ -1,5 +1,8 @@
 package at.ac.fhcampuswien.fhmdb.models;
 
+import at.ac.fhcampuswien.fhmdb.API.MovieAPI;
+
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -119,4 +122,9 @@ public class Movie {
     }
 
     private double rating;
+
+    public static List<Movie> initializeMoviesFromAPI() throws IOException {
+        MovieAPI movieApi = new MovieAPI();
+        return movieApi.getRequest();
+    }
 }

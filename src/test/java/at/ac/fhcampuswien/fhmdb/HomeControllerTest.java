@@ -6,6 +6,7 @@ import at.ac.fhcampuswien.fhmdb.models.SortedState;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 
@@ -19,13 +20,13 @@ class HomeControllerTest {
     }
 
     @Test
-    void at_initialization_allMovies_and_observableMovies_should_be_filled_and_equal() {
+    void at_initialization_allMovies_and_observableMovies_should_be_filled_and_equal() throws IOException {
         homeController.initializeState();
         assertEquals(homeController.allMovies, homeController.observableMovies);
     }
 
     @Test
-    void if_not_yet_sorted_sort_is_applied_in_ascending_order() {
+    void if_not_yet_sorted_sort_is_applied_in_ascending_order() throws IOException {
         // given
         homeController.initializeState();
         homeController.sortedState = SortedState.NONE;
@@ -63,7 +64,7 @@ class HomeControllerTest {
     }
 
     @Test
-    void if_last_sort_ascending_next_sort_should_be_descending() {
+    void if_last_sort_ascending_next_sort_should_be_descending() throws IOException {
         // given
         homeController.initializeState();
         homeController.sortedState = SortedState.ASCENDING;
@@ -99,7 +100,7 @@ class HomeControllerTest {
     }
 
     @Test
-    void if_last_sort_descending_next_sort_should_be_ascending() {
+    void if_last_sort_descending_next_sort_should_be_ascending() throws IOException {
         // given
         homeController.initializeState();
         homeController.sortedState = SortedState.DESCENDING;
@@ -137,7 +138,7 @@ class HomeControllerTest {
     }
 
     @Test
-    void query_filter_matches_with_lower_and_uppercase_letters(){
+    void query_filter_matches_with_lower_and_uppercase_letters() throws IOException {
         // given
         homeController.initializeState();
         String query = "IfE";
@@ -161,7 +162,7 @@ class HomeControllerTest {
     }
 
     @Test
-    void query_filter_with_null_movie_list_throws_exception(){
+    void query_filter_with_null_movie_list_throws_exception() throws IOException {
         // given
         homeController.initializeState();
         String query = "IfE";
@@ -171,7 +172,7 @@ class HomeControllerTest {
     }
 
     @Test
-    void query_filter_with_null_value_returns_unfiltered_list() {
+    void query_filter_with_null_value_returns_unfiltered_list() throws IOException {
         // given
         homeController.initializeState();
         String query = null;
@@ -184,7 +185,7 @@ class HomeControllerTest {
     }
 
     @Test
-    void genre_filter_with_null_value_returns_unfiltered_list() {
+    void genre_filter_with_null_value_returns_unfiltered_list() throws IOException {
         // given
         homeController.initializeState();
         Genre genre = null;
@@ -197,7 +198,7 @@ class HomeControllerTest {
     }
 
     @Test
-    void genre_filter_returns_all_movies_containing_given_genre() {
+    void genre_filter_returns_all_movies_containing_given_genre() throws IOException {
         // given
         homeController.initializeState();
         Genre genre = Genre.DRAMA;
@@ -210,7 +211,7 @@ class HomeControllerTest {
     }
 
     @Test
-    void no_filtering_ui_if_empty_query_or_no_genre_is_set() {
+    void no_filtering_ui_if_empty_query_or_no_genre_is_set() throws IOException {
         // given
         homeController.initializeState();
 

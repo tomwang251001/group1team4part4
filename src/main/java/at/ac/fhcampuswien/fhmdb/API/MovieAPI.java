@@ -3,19 +3,14 @@ import at.ac.fhcampuswien.fhmdb.models.Movie;
 import com.google.gson.*;
 import okhttp3.*;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 
 public class MovieAPI{
 
-    private final OkHttpClient client;
+    private final OkHttpClient client = new OkHttpClient();
     //public static final String CONNECTOR = "&";
     private static final String URL = "http://prog2.fh-campuswien.ac.at";
-
-    public MovieAPI(){
-        this.client = new OkHttpClient();
-    }
 
     public List<Movie> getRequest() throws IOException {
         Request request = new Request.Builder()
@@ -33,11 +28,10 @@ public class MovieAPI{
         for (JsonElement element : jArray) {
             Movie item = gson.fromJson(element, Movie.class);
             movies.add(item);
-
         }
+
         response.close();
         return movies;
     }
-
 
 }
