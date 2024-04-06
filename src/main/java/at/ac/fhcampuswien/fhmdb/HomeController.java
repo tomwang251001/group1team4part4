@@ -19,6 +19,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 public class HomeController implements Initializable {
     @FXML
@@ -69,7 +70,12 @@ public class HomeController implements Initializable {
         genreComboBox.setPromptText("Filter by Genre");
 
         releaseYearComboBox.setPromptText("Filter by Releaseyear");
-        releaseYearComboBox.getItems().setAll();
+        releaseYearComboBox.getItems().addAll(
+                IntStream.rangeClosed(1946, 2023)
+                        .boxed()
+                        .collect(Collectors.toList())
+        );
+
 
         ratingComboBox.setPromptText("Filter by Rating");
         ratingComboBox.getItems().addAll("No filter",1,2,3,4,5,6,7,8,9);
