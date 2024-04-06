@@ -11,7 +11,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
-/*
+
 class HomeControllerTest {
     private static HomeController homeController;
     @BeforeAll
@@ -221,5 +221,48 @@ class HomeControllerTest {
         // then
         assertEquals(homeController.allMovies, homeController.observableMovies);
     }
+
+    @Test
+    public void test_Amount_of_Movies_by_GetMoviesBetweenYears() {
+        // given; list of movies from API for testing
+        List<Movie> movies = Movie.initializeMoviesFromAPI();
+        HomeController controller = new HomeController();
+
+        // when
+        List<Movie> result = controller.getMoviesBetweenYears(movies, 1995, 1997);
+
+        // then
+        assertEquals(4, result.size()); // Expecting 2 movies between 1995 and 2015
+
+    }
+    @Test
+    public void test_4_explicit_Movies_from_GetMoviesBetweenYears() {
+        // given; list of movies from API for testing
+        List<Movie> movies = Movie.initializeMoviesFromAPI();
+        HomeController controller = new HomeController();
+
+        // when
+        List<Movie> result = controller.getMoviesBetweenYears(movies, 1995, 1997);
+
+        // then
+        assertTrue( result.stream().anyMatch(movie -> movie.getTitle().contains("Life Is Beautiful")));
+        assertTrue( result.stream().anyMatch(movie -> movie.getTitle().contains("Seven")));
+        assertTrue( result.stream().anyMatch(movie -> movie.getTitle().contains("The Usual Suspects")));
+        assertTrue( result.stream().anyMatch(movie -> movie.getTitle().contains("Toy Story")));
+    }
+
+    @Test
+    public void test_getLongestMovieTitle() {
+        // given; list of movies from API for testing
+        List<Movie> movies = Movie.initializeMoviesFromAPI();
+        HomeController controller = new HomeController();
+
+        // when
+        int result = controller.getLongestMovieTitle(movies);
+
+        // then
+        assertEquals(result , 46);
+
+    }
+
 }
-*/

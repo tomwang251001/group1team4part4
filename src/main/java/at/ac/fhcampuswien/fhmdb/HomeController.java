@@ -17,10 +17,8 @@ import javafx.scene.control.TextField;
 
 import java.io.IOException;
 import java.net.URL;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Objects;
-import java.util.ResourceBundle;
+import java.util.*;
+import java.util.stream.Collectors;
 
 public class HomeController implements Initializable {
     @FXML
@@ -36,7 +34,7 @@ public class HomeController implements Initializable {
     public JFXComboBox genreComboBox;
 
     @FXML
-    public JFXComboBox releaseYearComboBox;
+    public JFXComboBox<Integer> releaseYearComboBox;
     @FXML
     public JFXComboBox ratingComboBox;
     @FXML
@@ -70,14 +68,11 @@ public class HomeController implements Initializable {
         genreComboBox.getItems().addAll(genres);    // add all genres to the combobox
         genreComboBox.setPromptText("Filter by Genre");
 
-        releaseYearComboBox.getItems().add("No Filter");
-        //releaseYearComboBox.getItems().add();
         releaseYearComboBox.setPromptText("Filter by Releaseyear");
+        releaseYearComboBox.getItems().setAll();
 
-        ratingComboBox.getItems().add("No Filter");
-
-        ratingComboBox.setPromptText("Filter by Releaseyear");
-
+        ratingComboBox.setPromptText("Filter by Rating");
+        ratingComboBox.getItems().addAll("No filter",1,2,3,4,5,6,7,8,9);
     }
 
     public void sortMovies(){
@@ -162,8 +157,10 @@ public class HomeController implements Initializable {
     }
 
     int getLongestMovieTitle(List<Movie> movies){
-
-        return 1;
+        return movies.stream()
+                .mapToInt(movie -> movie.getTitle().length())
+                .max()
+                .orElse(0);
     }
 
     long countMoviesFrom(List<Movie> movies, String director){
@@ -171,8 +168,11 @@ public class HomeController implements Initializable {
         return 1L;
     }
 
-    List<Movie> getMoviesBetweenYears(List<Movie> movies, int startYear, int endYear){
-
-        return movies;
+    public List<Movie> getMoviesBetweenYears(List<Movie> movies, int startYear, int endYear){
+        return movies.stream()
+                .filter(movie -> movie
+                .getReleaseYear() >= startYear && movie
+                .getReleaseYear() <= endYear)
+                .collect(Collectors.toList());
     }
 }
