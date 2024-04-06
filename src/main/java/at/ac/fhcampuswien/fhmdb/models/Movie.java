@@ -13,7 +13,7 @@ public class Movie {
     public final String title;
     public final String description;
     public final List<Genre> genres;
-    public int id;
+    public String id;
     public int releaseYear;
     public String imgUrl;
     public int lengthInMinutes;
@@ -22,7 +22,7 @@ public class Movie {
     public List<String> mainCast;
     public double rating;
 
-    public Movie(int id, String title, List<Genre> genres, int releaseYear, String description, String imgUrl, int lengthInMinutes, List<String> directors, List<String> writers, List<String> mainCast, double rating) {
+    public Movie(String id, String title, List<Genre> genres, int releaseYear, String description, String imgUrl, int lengthInMinutes, List<String> directors, List<String> writers, List<String> mainCast, double rating) {
         this.id = id;
         this.title = title;
         this.genres = genres;
@@ -35,7 +35,7 @@ public class Movie {
         this.mainCast = mainCast;
         this.rating = rating;
     }
-    public static List<Movie> initializeMovies(){
+    public static List<Movie> initializeMoviesFromAPI(){
         MovieAPI movieAPI = new MovieAPI();
         Gson gson = new Gson();
 
@@ -69,7 +69,7 @@ public class Movie {
     public List<Genre> getGenres() {
         return genres;
     }
-    public int getId() {
+    public String getId() {
         return id;
     }
     public int getReleaseYear() {
