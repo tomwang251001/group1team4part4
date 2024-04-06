@@ -10,17 +10,24 @@ public class MovieAPI{
 
     private final OkHttpClient client = new OkHttpClient();
     //public static final String CONNECTOR = "&";
-    private static final String URL = "http://prog2.fh-campuswien.ac.at";
+    private static final String URL = "http://prog2.fh-campuswien.ac.at/movies";
 
-    public List<Movie> getRequest() throws IOException {
+    public String getRequest(){
         Request request = new Request.Builder()
-                .url(URL + "/movies")
+                .url(URL)
                 .build();
 
         Call call = client.newCall(request);
-        Response response = call.execute();
+        try(Response response = call.execute()) {
 
-        Gson gson = new Gson();
+            return response.body().string();
+        } catch (IOException e){
+
+            return ("Something went wrong");
+        }
+
+
+       /* Gson gson = new Gson();
 
         List<Movie> movies = new ArrayList<>();
         JsonArray jArray = gson.fromJson(response.body().string(), JsonArray.class);
@@ -32,6 +39,7 @@ public class MovieAPI{
 
         response.close();
         return movies;
-    }
 
+        */
+    }
 }

@@ -44,24 +44,18 @@ public class HomeController implements Initializable {
 
     public List<Movie> allMovies;
 
-    private MovieAPI movieApi = new MovieAPI();
     protected ObservableList<Movie> observableMovies = FXCollections.observableArrayList();
 
     protected SortedState sortedState;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        try {
-            initializeState();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+        initializeState();
         initializeLayout();
     }
 
-    public void initializeState() throws IOException {
-        //allMovies = Movie.initialize();
-        allMovies = movieApi.getRequest();
+    public void initializeState() {
+        allMovies = Movie.initializeMovies();
         observableMovies.clear();
         observableMovies.addAll(allMovies); // add all movies to the observable list
         sortedState = SortedState.NONE;
