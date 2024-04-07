@@ -8,13 +8,14 @@ import java.util.*;
 
 public class MovieAPI{
 
-    private final OkHttpClient client = new OkHttpClient();
     //public static final String CONNECTOR = "&";
     private static final String URL = "http://prog2.fh-campuswien.ac.at/movies";
 
     public String getRequest(){
+        final OkHttpClient client = new OkHttpClient();
         Request request = new Request.Builder()
                 .url(URL)
+                .addHeader("User-Agent", "http.agent")
                 .build();
 
         Call call = client.newCall(request);

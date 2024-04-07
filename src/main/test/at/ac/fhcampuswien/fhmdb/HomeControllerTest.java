@@ -220,5 +220,33 @@ class HomeControllerTest {
         // then
         assertEquals(homeController.allMovies, homeController.observableMovies);
     }
+    @Test
+    public void testAmountGetMoviesBetweenYears() {
+        // Create a list of movies for testing
+        List<Movie> movies = Movie.initializeMoviesFromAPI();
+        HomeController controller = new HomeController();
+
+        // Call the method under test
+        List<Movie> result = controller.getMoviesBetweenYears(movies, 1995, 1997);
+
+        // Verify the result
+        assertEquals(4, result.size()); // Expecting 2 movies between 1995 and 2015
+
+    }
+    @Test
+    public void testGetMoviesBetweenYears() {
+        // Create a list of movies for testing
+        List<Movie> movies = Movie.initializeMoviesFromAPI();
+        HomeController controller = new HomeController();
+
+        // Call the method under test
+        List<Movie> result = controller.getMoviesBetweenYears(movies, 1995, 1997);
+
+        // Verify the result
+        assertTrue( result.stream().anyMatch(movie -> movie.getTitle().contains("Life Is Beautiful")));
+        assertTrue( result.stream().anyMatch(movie -> movie.getTitle().contains("Seven")));
+        assertTrue( result.stream().anyMatch(movie -> movie.getTitle().contains("The Usual Suspects")));
+        assertTrue( result.stream().anyMatch(movie -> movie.getTitle().contains("Toy Story")));
+    }
 
 }
