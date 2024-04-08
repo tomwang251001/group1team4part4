@@ -266,6 +266,8 @@ class HomeControllerTest {
     }
 
 
+
+
     @Test
     public void test_getMoviesByRating() {
         // given; list of movies from API for testing
@@ -279,6 +281,20 @@ class HomeControllerTest {
         assertTrue( result.stream().anyMatch(movie -> movie.getTitle().contains("The Godfather")));
         assertTrue( result.stream().anyMatch(movie -> movie.getTitle().contains("The Shawshank Redemption")));
         assertTrue( result.stream().anyMatch(movie -> movie.getTitle().contains("The Dark Knight")));
+    }
+
+    @Test
+    public void test_getMostPopularActor() {
+        // given; list of movies from API for testing
+        List<Movie> movies = Movie.initializeMoviesFromAPI();
+        HomeController controller = new HomeController();
+
+        // when
+        String result = controller.getMostPopularActor(movies);
+
+        // then
+        assertEquals(result , "Leonardo DiCaprio");
+
     }
 
 }

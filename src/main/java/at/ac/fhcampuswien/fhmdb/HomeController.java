@@ -169,8 +169,13 @@ public class HomeController implements Initializable {
     }
 
     String getMostPopularActor(List<Movie> movies){
-
-        return "Movie";
+        return movies.stream()
+                .flatMap(movie -> movie.getMainCast().stream())
+                .collect(Collectors.groupingBy(actor -> actor, Collectors.counting()))
+                .entrySet().stream()
+                .max(Map.Entry.comparingByValue())
+                .map(Map.Entry::getKey)
+                .orElse("No main cast found");
     }
 
     int getLongestMovieTitle(List<Movie> movies){
