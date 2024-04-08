@@ -79,6 +79,7 @@ public class HomeController implements Initializable {
 
         ratingComboBox.setPromptText("Filter by Rating");
         ratingComboBox.getItems().addAll("No filter",1,2,3,4,5,6,7,8,9);
+
     }
 
     public void sortMovies(){
@@ -130,7 +131,7 @@ public class HomeController implements Initializable {
                 .toList();
     }
 
-    public void applyAllFilters(String searchQuery, Object genre) {
+    public void applyAllFilters(String searchQuery, Object genre, int rating) {
         List<Movie> filteredMovies = allMovies;
 
         if (!searchQuery.isEmpty()) {
@@ -141,6 +142,10 @@ public class HomeController implements Initializable {
             filteredMovies = filterByGenre(filteredMovies, Genre.valueOf(genre.toString()));
         }
 
+        if (!"No Filter".equals(ratingComboBox.getSelectionModel().getSelectedItem())){
+            filteredMovies = getMoviesByRating(filteredMovies, rating);
+        }
+
         observableMovies.clear();
         observableMovies.addAll(filteredMovies);
     }
@@ -148,8 +153,14 @@ public class HomeController implements Initializable {
     public void searchBtnClicked(ActionEvent actionEvent) {
         String searchQuery = searchField.getText().trim().toLowerCase();
         Object genre = genreComboBox.getSelectionModel().getSelectedItem();
+        int rating = 0;
+        if (!"No Filter".equals(ratingComboBox.getSelectionModel().getSelectedItem())) {
+            // Cast the selected item to Integer
+            rating = (Integer) ratingComboBox.getSelectionModel().getSelectedItem();
+        }
 
-        applyAllFilters(searchQuery, genre);
+
+        applyAllFilters(searchQuery, genre, rating);
         sortMovies(sortedState);
     }
 
@@ -179,6 +190,13 @@ public class HomeController implements Initializable {
                 .filter(movie -> movie
                 .getReleaseYear() >= startYear && movie
                 .getReleaseYear() <= endYear)
+                .collect(Collectors.toList());
+    }
+
+    public List<Movie> getMoviesByRating(List<Movie> movies, int rating){
+        return movies.stream()
+                .filter(movie -> movie
+                .getRating() >= rating )
                 .collect(Collectors.toList());
     }
 }

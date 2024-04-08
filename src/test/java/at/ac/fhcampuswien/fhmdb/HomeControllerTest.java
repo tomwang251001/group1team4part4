@@ -216,7 +216,7 @@ class HomeControllerTest {
         homeController.initializeState();
 
         // when
-        homeController.applyAllFilters("", null);
+        homeController.applyAllFilters("", null, 0);
 
         // then
         assertEquals(homeController.allMovies, homeController.observableMovies);
@@ -263,6 +263,22 @@ class HomeControllerTest {
         // then
         assertEquals(result , 46);
 
+    }
+
+
+    @Test
+    public void test_getMoviesByRating() {
+        // given; list of movies from API for testing
+        List<Movie> movies = Movie.initializeMoviesFromAPI();
+        HomeController controller = new HomeController();
+
+        // when
+        List<Movie> result = controller.getMoviesByRating(movies, 9);
+
+        // then
+        assertTrue( result.stream().anyMatch(movie -> movie.getTitle().contains("The Godfather")));
+        assertTrue( result.stream().anyMatch(movie -> movie.getTitle().contains("The Shawshank Redemption")));
+        assertTrue( result.stream().anyMatch(movie -> movie.getTitle().contains("The Dark Knight")));
     }
 
 }
