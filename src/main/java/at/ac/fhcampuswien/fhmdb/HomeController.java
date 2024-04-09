@@ -130,6 +130,7 @@ public class HomeController implements Initializable {
                 .toList();
     }
 
+    //TODO: add parameter year ind applyAllFilters
     public void applyAllFilters(String searchQuery, Object genre, int rating) {
         List<Movie> filteredMovies = allMovies;
 
@@ -144,6 +145,8 @@ public class HomeController implements Initializable {
             filteredMovies = getMoviesByRating(filteredMovies, rating);
         }
 
+        //TODO: add if Statement for filter by year
+
         observableMovies.clear();
         observableMovies.addAll(filteredMovies);
     }
@@ -152,13 +155,13 @@ public class HomeController implements Initializable {
         String searchQuery = searchField.getText().trim().toLowerCase();
         Object genre = genreComboBox.getSelectionModel().getSelectedItem();
 
-
-
         int rating = 0;
         if (!"No Filter".equals(ratingComboBox.getSelectionModel().getSelectedItem())) {
             // Cast the selected item to Integer
             rating = (Integer) ratingComboBox.getSelectionModel().getSelectedItem();
         }
+
+        //TODO: add year in methode call applyAllFilters
 
         applyAllFilters(searchQuery, genre, rating);
         sortMovies(sortedState);
@@ -187,6 +190,7 @@ public class HomeController implements Initializable {
                 .orElse(0);
     }
 
+    //TODO: implement methode
     long countMoviesFrom(List<Movie> movies, String director){
 
         return 1L;

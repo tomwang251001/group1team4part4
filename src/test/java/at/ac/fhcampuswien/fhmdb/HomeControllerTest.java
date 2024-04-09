@@ -215,6 +215,8 @@ class HomeControllerTest {
 
         homeController.initializeState();
 
+        //TODO: change Movies to API call, its easier; like test_Amount_of_Movies_by_GetMoviesBetweenYears()
+
         List<Movie>actualMovies = homeController.filterByReleaseYear(homeController.observableMovies, "1994");
         List<String>actualTitles = homeController.getTitle(actualMovies);
 
