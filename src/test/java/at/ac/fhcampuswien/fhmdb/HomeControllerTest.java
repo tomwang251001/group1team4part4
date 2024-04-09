@@ -209,6 +209,7 @@ class HomeControllerTest {
         // then
         assertEquals(4, actual.size());
     }
+
     @Test
     void releaseYear_filter_with_null_value_returns_unfiltered_list(){
 
@@ -284,7 +285,7 @@ class HomeControllerTest {
         homeController.initializeState();
 
         // when
-        homeController.applyAllFilters("", null, null);
+        homeController.applyAllFilters("", null);
 
         // then
         assertEquals(homeController.allMovies, homeController.observableMovies);
