@@ -285,7 +285,7 @@ class HomeControllerTest {
         homeController.initializeState();
 
         // when
-        homeController.applyAllFilters("", null);
+        homeController.applyAllFilters("", null, 0);
 
         // then
         assertEquals(homeController.allMovies, homeController.observableMovies);
@@ -364,6 +364,19 @@ class HomeControllerTest {
         List<String>expected = Arrays.asList("Avatar", "Life Is Beautiful", "Puss in Boots", "The Usual Suspects", "The Wolf of Wall Street");
 
         assertEquals(expected, actual);
+    }
+    @Test
+    public void test_getMostPopularActor() {
+        // given; list of movies from API for testing
+        List<Movie> movies = Movie.initializeMoviesFromAPI();
+        HomeController controller = new HomeController();
+
+        // when
+        String result = controller.getMostPopularActor(movies);
+
+        // then
+        assertEquals(result , "Leonardo DiCaprio");
+
     }
 
 }

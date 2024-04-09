@@ -130,7 +130,7 @@ public class HomeController implements Initializable {
                 .toList();
     }
 
-    public void applyAllFilters(String searchQuery, Object genre) {
+    public void applyAllFilters(String searchQuery, Object genre, int rating) {
         List<Movie> filteredMovies = allMovies;
 
         if (!searchQuery.isEmpty()) {
@@ -139,6 +139,9 @@ public class HomeController implements Initializable {
 
         if (genre != null && !genre.toString().equals("No filter")) {
             filteredMovies = filterByGenre(filteredMovies, Genre.valueOf(genre.toString()));
+        }
+        if (!"No Filter".equals(ratingComboBox.getSelectionModel().getSelectedItem())){
+            filteredMovies = getMoviesByRating(filteredMovies, rating);
         }
 
         observableMovies.clear();
@@ -149,8 +152,17 @@ public class HomeController implements Initializable {
         String searchQuery = searchField.getText().trim().toLowerCase();
         Object genre = genreComboBox.getSelectionModel().getSelectedItem();
 
-        applyAllFilters(searchQuery, genre);
+
+
+        int rating = 0;
+        if (!"No Filter".equals(ratingComboBox.getSelectionModel().getSelectedItem())) {
+            // Cast the selected item to Integer
+            rating = (Integer) ratingComboBox.getSelectionModel().getSelectedItem();
+        }
+
+        applyAllFilters(searchQuery, genre, rating);
         sortMovies(sortedState);
+
     }
 
     public void sortBtnClicked(ActionEvent actionEvent) {
@@ -159,7 +171,13 @@ public class HomeController implements Initializable {
 
     String getMostPopularActor(List<Movie> movies){
 
-        return "Movie";
+        return movies.stream()
+                .flatMap(movie -> movie.getMainCast().stream())
+                .collect(Collectors.groupingBy(actor -> actor, Collectors.counting()))
+                .entrySet().stream()
+                .max(Map.Entry.comparingByValue())
+                .map(Map.Entry::getKey)
+                .orElse("No main cast found");
     }
 
     int getLongestMovieTitle(List<Movie> movies){
@@ -179,6 +197,13 @@ public class HomeController implements Initializable {
                 .filter(movie -> movie
                 .getReleaseYear() >= startYear && movie
                 .getReleaseYear() <= endYear)
+                .collect(Collectors.toList());
+    }
+
+    public List<Movie> getMoviesByRating(List<Movie> movies, int rating){
+        return movies.stream()
+                .filter(movie -> movie
+                        .getRating() >= rating )
                 .collect(Collectors.toList());
     }
 }
