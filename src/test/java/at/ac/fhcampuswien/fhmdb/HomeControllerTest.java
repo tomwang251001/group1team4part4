@@ -3,14 +3,18 @@ package at.ac.fhcampuswien.fhmdb;
 import at.ac.fhcampuswien.fhmdb.models.Genre;
 import at.ac.fhcampuswien.fhmdb.models.Movie;
 import at.ac.fhcampuswien.fhmdb.models.SortedState;
+import javafx.event.ActionEvent;
+import javafx.fxml.FXML;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
+import java.net.URL;
 import java.util.Arrays;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
+
 
 class HomeControllerTest {
     private static HomeController homeController;
@@ -211,7 +215,7 @@ class HomeControllerTest {
     }
 
     @Test
-    void releaseYear_filter_with_null_value_returns_unfiltered_list(){
+    void releaseYear_filter_returns_movies_as_a_list_depending_on_release_year(){
 
         homeController.initializeState();
 
@@ -282,12 +286,23 @@ class HomeControllerTest {
     }
 
     @Test
-    void no_filtering_ui_if_empty_query_or_no_genre_and_no_releaseYear_is_set() throws IOException {
+    void releaseYear_filter_with_null_value_returns_unfiltered_list(){
+        homeController.initializeState();
+
+        List<Movie> actual = homeController.filterByReleaseYear(homeController.observableMovies, null);
+
+        List<Movie> expected = homeController.observableMovies;
+
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    void no_filtering_ui_if_empty_query_and_no_genre_no_releaseYear_and_no_rating_is_set() throws IOException {
         // given
         homeController.initializeState();
 
         // when
-        homeController.applyAllFilters("", null, 0);
+        homeController.applyAllFilters("", null, 0, 0);
 
         // then
         assertEquals(homeController.allMovies, homeController.observableMovies);
@@ -380,5 +395,6 @@ class HomeControllerTest {
         assertEquals(result , "Leonardo DiCaprio");
 
     }
+
 
 }
