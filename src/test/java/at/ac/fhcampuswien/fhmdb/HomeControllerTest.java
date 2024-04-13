@@ -10,6 +10,7 @@ import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -17,10 +18,16 @@ import static org.junit.jupiter.api.Assertions.*;
 
 
 class HomeControllerTest {
+
+    //// given; list of movies from API for testing
     private static HomeController homeController;
+    private static List<Movie> movies;
+
     @BeforeAll
     static void init() {
         homeController = new HomeController();
+        movies = Movie.initializeMoviesFromAPI();
+
     }
 
     @Test
@@ -304,18 +311,16 @@ class HomeControllerTest {
         // when
         homeController.applyAllFilters("", null, 0, 0);
 
+
         // then
-        assertEquals(homeController.allMovies, homeController.observableMovies);
+        assertEquals(movies, homeController.observableMovies);
     }
 
     @Test
     public void test_Amount_of_Movies_by_GetMoviesBetweenYears() {
-        // given; list of movies from API for testing
-        List<Movie> movies = Movie.initializeMoviesFromAPI();
-        HomeController controller = new HomeController();
 
         // when
-        List<Movie> result = controller.getMoviesBetweenYears(movies, 1995, 1997);
+        List<Movie> result = homeController.getMoviesBetweenYears(movies, 1995, 1997);
 
         // then
         assertEquals(4, result.size()); // Expecting 2 movies between 1995 and 2015
@@ -323,12 +328,8 @@ class HomeControllerTest {
     }
     @Test
     public void test_4_explicit_Movies_from_GetMoviesBetweenYears() {
-        // given; list of movies from API for testing
-        List<Movie> movies = Movie.initializeMoviesFromAPI();
-        HomeController controller = new HomeController();
-
         // when
-        List<Movie> result = controller.getMoviesBetweenYears(movies, 1995, 1997);
+        List<Movie> result = homeController.getMoviesBetweenYears(movies, 1995, 1997);
 
         // then
         assertTrue( result.stream().anyMatch(movie -> movie.getTitle().contains("Life Is Beautiful")));
@@ -339,12 +340,8 @@ class HomeControllerTest {
 
     @Test
     public void test_getLongestMovieTitle() {
-        // given; list of movies from API for testing
-        List<Movie> movies = Movie.initializeMoviesFromAPI();
-        HomeController controller = new HomeController();
-
         // when
-        int result = controller.getLongestMovieTitle(movies);
+        int result = homeController.getLongestMovieTitle(movies);
 
         // then
         assertEquals(result , 46);
@@ -384,17 +381,21 @@ class HomeControllerTest {
     }
     @Test
     public void test_getMostPopularActor() {
-        // given; list of movies from API for testing
-        List<Movie> movies = Movie.initializeMoviesFromAPI();
-        HomeController controller = new HomeController();
-
         // when
-        String result = controller.getMostPopularActor(movies);
+        String result = homeController.getMostPopularActor(movies);
 
         // then
         assertEquals(result , "Leonardo DiCaprio");
 
     }
 
+    @Test
+    void count_Movies_From_Returns_3_With_Tarantino() {
+        //when
+        long result = homeController.countMoviesFrom(movies, "Quentin Tarantino");
 
+        //then
+        assertEquals(3,result);
+
+    }
 }

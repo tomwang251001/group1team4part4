@@ -151,6 +151,18 @@ public class HomeController implements Initializable {
     public void applyAllFilters(String searchQuery, Object genre, Object releaseYear, int rating) {
         List<Movie> filteredMovies = allMovies;
 
+        /*
+        if(searchQuery.isEmpty() && genre == null && releaseYear == null && "No Filter".equals(ratingComboBox.getSelectionModel().getSelectedItem())){
+            observableMovies.clear();
+            observableMovies.addAll(allMovies);
+            sortedState = SortedState.NONE;
+
+
+        }
+
+         */
+
+
         if (!searchQuery.isEmpty()) {
             filteredMovies = filterByQuery(filteredMovies, searchQuery);
         }
@@ -159,19 +171,24 @@ public class HomeController implements Initializable {
             filteredMovies = filterByGenre(filteredMovies, Genre.valueOf(genre.toString()));
         }
 
-        if (releaseYear != null){
+        if (releaseYear != null) {
             filteredMovies = filterByReleaseYear(filteredMovies, releaseYear.toString());
         }
 
-        if (!"No Filter".equals(ratingComboBox.getSelectionModel().getSelectedItem())){
+        if (!"No Filter".equals(ratingComboBox.getSelectionModel().getSelectedItem())) {
             filteredMovies = getMoviesByRating(filteredMovies, rating);
         }
 
+
         //TODO: add if Statement for filter by year
 
-        observableMovies.clear();
-        observableMovies.addAll(filteredMovies);
+        if (!searchQuery.isEmpty() && genre != null && releaseYear != null && !"No Filter".equals(ratingComboBox.getSelectionModel().getSelectedItem())) {
+
+            observableMovies.clear();
+            observableMovies.addAll(filteredMovies);
+        }
     }
+
 
     public void searchBtnClicked(ActionEvent actionEvent) {
         String searchQuery = searchField.getText().trim().toLowerCase();
@@ -226,7 +243,9 @@ public class HomeController implements Initializable {
     //TODO: implement methode
     long countMoviesFrom(List<Movie> movies, String director){
 
-        return 1L;
+        return movies.stream()
+                .filter(movie -> movie
+                        .getDirectors().contains(director)).count();
     }
 
     public List<Movie> getMoviesBetweenYears(List<Movie> movies, int startYear, int endYear){
