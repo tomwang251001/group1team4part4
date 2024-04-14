@@ -60,7 +60,7 @@ public class HomeController implements Initializable {
         observableMovies.clear();
         observableMovies.addAll(allMovies); // add all movies to the observable list
         sortedState = SortedState.NONE;
-        sortMovies(SortedState.ASCENDING);
+        //sortMovies(SortedState.ASCENDING);
     }
 
     public void initializeLayout() {

@@ -44,7 +44,7 @@ class HomeControllerTest {
 
         // when
         List<Movie> result = homeController.getObservableMovies();
-
+        homeController.sortMovies(SortedState.ASCENDING);
         // then
         assertTrue(result.get(0).getTitle().contains("12 Angry Men"));
         assertTrue(result.get(1).getTitle().contains("Avatar"));
