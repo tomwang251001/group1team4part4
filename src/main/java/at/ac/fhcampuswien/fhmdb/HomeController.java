@@ -60,6 +60,7 @@ public class HomeController implements Initializable {
         observableMovies.clear();
         observableMovies.addAll(allMovies); // add all movies to the observable list
         sortedState = SortedState.NONE;
+        sortMovies(SortedState.ASCENDING);
     }
 
     public void initializeLayout() {
@@ -82,7 +83,9 @@ public class HomeController implements Initializable {
         ratingComboBox.setPromptText("Filter by Rating");
         ratingComboBox.getItems().addAll("No filter",1,2,3,4,5,6,7,8,9);
     }
-
+    protected List<Movie> getObservableMovies() {
+        return observableMovies;
+    }
     public void sortMovies(){
         if (sortedState == SortedState.NONE || sortedState == SortedState.DESCENDING) {
             sortMovies(SortedState.ASCENDING);
