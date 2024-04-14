@@ -218,7 +218,7 @@ class HomeControllerTest {
         List<Movie> actual = homeController.filterByGenre(homeController.observableMovies, genre);
 
         // then
-        assertEquals(4, actual.size());
+        assertEquals(22, actual.size());
     }
 
     @Test

@@ -156,12 +156,8 @@ public class HomeController implements Initializable {
             observableMovies.clear();
             observableMovies.addAll(allMovies);
             sortedState = SortedState.NONE;
-
-
         }
-
          */
-
 
         if (!searchQuery.isEmpty()) {
             filteredMovies = filterByQuery(filteredMovies, searchQuery);
@@ -179,16 +175,13 @@ public class HomeController implements Initializable {
             filteredMovies = getMoviesByRating(filteredMovies, rating);
         }
 
-
-        //TODO: add if Statement for filter by year
-
         if (!searchQuery.isEmpty() && genre != null && releaseYear != null && !"No Filter".equals(ratingComboBox.getSelectionModel().getSelectedItem())) {
-
-            observableMovies.clear();
-            observableMovies.addAll(filteredMovies);
+            filteredMovies = allMovies;
         }
-    }
+        observableMovies.clear();
+        observableMovies.addAll(filteredMovies);
 
+    }
 
     public void searchBtnClicked(ActionEvent actionEvent) {
         String searchQuery = searchField.getText().trim().toLowerCase();
@@ -201,11 +194,8 @@ public class HomeController implements Initializable {
             rating = (Integer) ratingComboBox.getSelectionModel().getSelectedItem();
         }
 
-        //TODO: add year in methode call applyAllFilters
-
         applyAllFilters(searchQuery, genre, releaseYear, rating);
         sortMovies(sortedState);
-
     }
 
     public void clearBtnClicked(ActionEvent actionEvent){
