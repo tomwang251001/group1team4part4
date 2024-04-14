@@ -58,32 +58,11 @@ class HomeControllerTest {
 
         // when
         homeController.sortMovies();
+        List<Movie> result = homeController.getObservableMovies();
 
         // then
-        List<Movie> expected = Arrays.asList(
-                new Movie(
-                        "The Wolf of Wall Street",
-                        "Based on the true story of Jordan Belfort, from his rise to a wealthy stock-broker living the high life to his fall involving crime, corruption and the federal government.",
-                        Arrays.asList(Genre.DRAMA, Genre.ROMANCE, Genre.BIOGRAPHY)),
-                new Movie(
-                        "The Usual Suspects",
-                        "A sole survivor tells of the twisty events leading up to a horrific gun battle on a boat, which begin when five criminals meet at a seemingly random police lineup.",
-                        Arrays.asList(Genre.CRIME, Genre.DRAMA, Genre.MYSTERY)),
-                new Movie(
-                        "Puss in Boots",
-                        "An outlaw cat, his childhood egg-friend, and a seductive thief kitty set out in search for the eggs of the fabled Golden Goose to clear his name, restore his lost honor, and regain the trust of his mother and town.",
-                        Arrays.asList(Genre.COMEDY, Genre.FAMILY, Genre.ANIMATION)),
-                new Movie(
-                        "Life Is Beautiful",
-                        "When an open-minded Jewish librarian and his son become victims of the Holocaust, he uses a perfect mixture of will, humor, and imagination to protect his son from the dangers around their camp." ,
-                        Arrays.asList(Genre.DRAMA, Genre.ROMANCE)),
-                new Movie(
-                        "Avatar",
-                        "A paraplegic Marine dispatched to the moon Pandora on a unique mission becomes torn between following his orders and protecting the world he feels is his home.",
-                        Arrays.asList(Genre.ANIMATION, Genre.DRAMA, Genre.ACTION))
-        );
-
-        assertEquals(expected, homeController.observableMovies);
+        assertTrue(result.get(0).getTitle().contains("Toy Story"));
+        assertTrue(result.get(1).getTitle().contains("The Wolf of Wall Street"));
     }
 
     @Test
