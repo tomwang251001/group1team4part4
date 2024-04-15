@@ -5,6 +5,7 @@ import at.ac.fhcampuswien.fhmdb.models.Genre;
 import at.ac.fhcampuswien.fhmdb.models.Movie;
 import at.ac.fhcampuswien.fhmdb.models.SortedState;
 import at.ac.fhcampuswien.fhmdb.ui.MovieCell;
+import com.google.gson.Gson;
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXComboBox;
 import com.jfoenix.controls.JFXListView;
@@ -106,7 +107,7 @@ public class HomeController implements Initializable {
         }
     }
 
-    public List<Movie> filterByQuery(List<Movie> movies, String query){
+    /*public List<Movie> filterByQuery(List<Movie> movies, String query){
         if(query == null || query.isEmpty()) return movies;
 
         if(movies == null) {
@@ -120,9 +121,9 @@ public class HomeController implements Initializable {
                     movie.getDescription().toLowerCase().contains(query.toLowerCase())
                 )
                 .toList();
-    }
+    }'/
 
-    public List<Movie> filterByGenre(List<Movie> movies, Genre genre){
+    /*public List<Movie> filterByGenre(List<Movie> movies, Genre genre){
         if(genre == null) return movies;
 
         if(movies == null) {
@@ -133,9 +134,9 @@ public class HomeController implements Initializable {
                 .filter(Objects::nonNull)
                 .filter(movie -> movie.getGenres().contains(genre))
                 .toList();
-    }
+    }*/
 
-    public List<Movie> filterByReleaseYear(List<Movie> movies, String releaseYear){
+    /*public List<Movie> filterByReleaseYear(List<Movie> movies, String releaseYear){
         if(releaseYear == null){
             return movies;
         }
@@ -148,41 +149,40 @@ public class HomeController implements Initializable {
                 .filter(Objects::nonNull)
                 .filter(movie -> movie.getReleaseYear() == Integer.valueOf(releaseYear))
                 .toList();
-    }
+    }*/
 
     //TODO: add parameter year ind applyAllFilters
     public void applyAllFilters(String searchQuery, Object genre, Object releaseYear, int rating) {
-        List<Movie> filteredMovies = allMovies;
+        List<Movie> filteredMovies;
 
-        /*
-        if(searchQuery.isEmpty() && genre == null && releaseYear == null && "No Filter".equals(ratingComboBox.getSelectionModel().getSelectedItem())){
-            observableMovies.clear();
-            observableMovies.addAll(allMovies);
-            sortedState = SortedState.NONE;
-        }
-         */
 
-        if (!searchQuery.isEmpty()) {
-            filteredMovies = filterByQuery(filteredMovies, searchQuery);
-        }
+        String genrefilter = null;
+        try{
+            if (!(genre.toString().equals("No filter") || genre.toString().equals("Filter by Genre"))){
+                genrefilter = genre.toString();
+            } else {genre = null;}
+        }catch(Exception e){}
 
-        if (genre != null && !genre.toString().equals("No filter")) {
-            filteredMovies = filterByGenre(filteredMovies, Genre.valueOf(genre.toString()));
-        }
 
-        if (releaseYear != null) {
-            filteredMovies = filterByReleaseYear(filteredMovies, releaseYear.toString());
+        int year = 0;
+        try {
+            year = Integer.parseInt(releaseYear.toString());
+        } catch (Exception e) {
+            year = 0;
         }
 
-            filteredMovies = getMoviesByRating(filteredMovies, rating);
-
-
-        if (!searchQuery.isEmpty() && genre != null && releaseYear != null && !"No Filter".equals(ratingComboBox.getSelectionModel().getSelectedItem())) {
-            filteredMovies = allMovies;
+        double ratingfilter = 0;
+        try {
+            ratingfilter = rating;
+        } catch (Exception e) {
+            rating = -1;
         }
+
+
+        Gson gson = new Gson();
+        filteredMovies = List.of(gson.fromJson(MovieAPI.searchMovies(searchQuery, genrefilter, year, ratingfilter), Movie[].class));
         observableMovies.clear();
         observableMovies.addAll(filteredMovies);
-
     }
 
     public void searchBtnClicked(ActionEvent actionEvent) {
@@ -248,12 +248,12 @@ public class HomeController implements Initializable {
                 .collect(Collectors.toList());
     }
 
-    public List<Movie> getMoviesByRating(List<Movie> movies, int rating){
+    /*public List<Movie> getMoviesByRating(List<Movie> movies, int rating){
         return movies.stream()
                 .filter(movie -> movie
                         .getRating() >= rating )
                 .collect(Collectors.toList());
-    }
+    }*/
 
 
     public List<String> getTitle(List<Movie> movies){

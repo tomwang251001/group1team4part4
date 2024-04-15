@@ -11,7 +11,7 @@ public class MovieAPI{
     //public static final String CONNECTOR = "&";
     private static final String URL = "http://prog2.fh-campuswien.ac.at/movies";
 
-    public String getRequest(){
+    public String getRequest() {
         final OkHttpClient client = new OkHttpClient();
         Request request = new Request.Builder()
                 .url(URL)
@@ -19,28 +19,44 @@ public class MovieAPI{
                 .build();
 
         Call call = client.newCall(request);
-        try(Response response = call.execute()) {
+        try (Response response = call.execute()) {
 
             return response.body().string();
-        } catch (IOException e){
+        } catch (IOException e) {
 
             return ("Something went wrong");
         }
 
+    }
 
-       /* Gson gson = new Gson();
 
-        List<Movie> movies = new ArrayList<>();
-        JsonArray jArray = gson.fromJson(response.body().string(), JsonArray.class);
+        public static String searchMovies(String query, String genre, int releaseYear, double ratingFrom)  {
 
-        for (JsonElement element : jArray) {
-            Movie item = gson.fromJson(element, Movie.class);
-            movies.add(item);
+            String url = URL;
+
+            if (query != null && !query.isEmpty()) {
+                url += "?query=" + query.replace(" ", " ");
+            }
+            if (genre != null && !genre.isEmpty()) {
+                url += (url.contains("?") ? "&" : "?") + "genre=" + genre;
+            }
+            if (releaseYear > 0) {
+                url += (url.contains("?") ? "&" : "?") + "releaseYear=" + releaseYear;
+            }
+            if (ratingFrom >= 0) {
+                url += (url.contains("?") ? "&" : "?") + "ratingFrom=" + ratingFrom;
+            }
+
+            OkHttpClient client = new OkHttpClient();
+            Request request = new Request.Builder()
+                    .url(url)
+                    .addHeader("User-Agent", "http.agent")
+                    .build();
+            try (Response response = client.newCall(request).execute()) {
+                return response.body().string();
+            } catch (IOException e) {
+                return ("Error");
+            }
         }
 
-        response.close();
-        return movies;
-
-        */
-    }
 }
