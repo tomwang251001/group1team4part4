@@ -151,7 +151,6 @@ public class HomeController implements Initializable {
                 .toList();
     }*/
 
-    //TODO: add parameter year ind applyAllFilters
     public void applyAllFilters(String searchQuery, Object genre, Object releaseYear, int rating) {
         List<Movie> filteredMovies;
 
@@ -232,7 +231,6 @@ public class HomeController implements Initializable {
                 .orElse(0);
     }
 
-    //TODO: implement methode
     long countMoviesFrom(List<Movie> movies, String director){
 
         return movies.stream()
