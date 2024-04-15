@@ -233,7 +233,7 @@ class HomeControllerTest {
         homeController.initializeState();
 
         // when
-        homeController.applyAllFilters("", null, 0, 0);
+        homeController.applyAllFilters("", null, null, 0);
 
 
         // then

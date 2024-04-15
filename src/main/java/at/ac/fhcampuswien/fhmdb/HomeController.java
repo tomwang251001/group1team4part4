@@ -174,9 +174,8 @@ public class HomeController implements Initializable {
             filteredMovies = filterByReleaseYear(filteredMovies, releaseYear.toString());
         }
 
-        if (!"No Filter".equals(ratingComboBox.getSelectionModel().getSelectedItem())) {
             filteredMovies = getMoviesByRating(filteredMovies, rating);
-        }
+
 
         if (!searchQuery.isEmpty() && genre != null && releaseYear != null && !"No Filter".equals(ratingComboBox.getSelectionModel().getSelectedItem())) {
             filteredMovies = allMovies;
@@ -192,7 +191,7 @@ public class HomeController implements Initializable {
         Object releaseYear = releaseYearComboBox.getValue();
 
         int rating = 0;
-        if (!"No Filter".equals(ratingComboBox.getSelectionModel().getSelectedItem()) && ratingComboBox.getValue() != null) {
+        if (ratingComboBox.getValue() != null && !"No Filter".equals(ratingComboBox.getSelectionModel().getSelectedItem())) {
             // Cast the selected item to Integer
             rating = (Integer) ratingComboBox.getSelectionModel().getSelectedItem();
         }
