@@ -13,14 +13,18 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.BorderPane;
 
 import java.io.IOException;
 import java.net.URL;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
 
 public class HomeController implements Initializable {
     @FXML
@@ -43,6 +47,8 @@ public class HomeController implements Initializable {
     public JFXComboBox ratingComboBox;
     @FXML
     public JFXButton sortBtn;
+    @FXML
+    public BorderPane mainPane;
 
     public List<Movie> allMovies;
 
@@ -94,6 +100,22 @@ public class HomeController implements Initializable {
             sortMovies(SortedState.DESCENDING);
         }
     }
+
+    public void setContentView(String pathToView){
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource(pathToView));
+
+        try{
+            mainPane.setCenter(fxmlLoader.load());
+        } catch (IOException e){
+            Alert errorAlert = new Alert(Alert.AlertType.ERROR, "Error loading view: " + e.getMessage(), ButtonType.OK);
+            errorAlert.show();
+        }
+
+    }
+
+    public void loadWatchlist(){
+        setContentView("watchlist-view.fxml");
+    }
     // sort movies based on sortedState
     // by default sorted state is NONE
     // afterwards it switches between ascending and descending
@@ -106,50 +128,6 @@ public class HomeController implements Initializable {
             sortedState = SortedState.DESCENDING;
         }
     }
-
-    /*public List<Movie> filterByQuery(List<Movie> movies, String query){
-        if(query == null || query.isEmpty()) return movies;
-
-        if(movies == null) {
-            throw new IllegalArgumentException("movies must not be null");
-        }
-
-        return movies.stream()
-                .filter(Objects::nonNull)
-                .filter(movie ->
-                    movie.getTitle().toLowerCase().contains(query.toLowerCase()) ||
-                    movie.getDescription().toLowerCase().contains(query.toLowerCase())
-                )
-                .toList();
-    }'/
-
-    /*public List<Movie> filterByGenre(List<Movie> movies, Genre genre){
-        if(genre == null) return movies;
-
-        if(movies == null) {
-            throw new IllegalArgumentException("movies must not be null");
-        }
-
-        return movies.stream()
-                .filter(Objects::nonNull)
-                .filter(movie -> movie.getGenres().contains(genre))
-                .toList();
-    }*/
-
-    /*public List<Movie> filterByReleaseYear(List<Movie> movies, String releaseYear){
-        if(releaseYear == null){
-            return movies;
-        }
-
-        if(movies == null) {
-            throw new IllegalArgumentException("movies must not be null");
-        };
-
-        return movies.stream()
-                .filter(Objects::nonNull)
-                .filter(movie -> movie.getReleaseYear() == Integer.valueOf(releaseYear))
-                .toList();
-    }*/
 
     public void applyAllFilters(String searchQuery, Object genre, Object releaseYear, int rating) {
         List<Movie> filteredMovies;
