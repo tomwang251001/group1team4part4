@@ -25,6 +25,7 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
+import at.ac.fhcampuswien.fhmdb.models.ClickEventHandler;
 
 public class HomeController implements Initializable {
     @FXML
@@ -237,4 +238,6 @@ public class HomeController implements Initializable {
                 .map(Movie::getTitle)
                 .toList();
     }
+
+    //TODO write methode for ClickEventHanlder<MovieCell> that adds movie to db
 }
