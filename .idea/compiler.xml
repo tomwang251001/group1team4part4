@@ -9,5 +9,8 @@
         <module name="fhmdb" />
       </profile>
     </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="ExceptionHandling2023" target="17" />
+    </bytecodeTargetLevel>
   </component>
 </project>
