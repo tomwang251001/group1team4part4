@@ -1,12 +1,17 @@
 package at.ac.fhcampuswien.fhmdb.database;
 
+import at.ac.fhcampuswien.fhmdb.models.Genre;
 import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.dao.DaoManager;
 import com.j256.ormlite.jdbc.JdbcConnectionSource;
 import com.j256.ormlite.support.ConnectionSource;
 import com.j256.ormlite.table.TableUtils;
 
+import java.sql.Array;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 public class Database {
     public static final String DB_URL= "jdbc:h2:file: ./db/moviedb";
@@ -36,7 +41,7 @@ public class Database {
     }
 
     public void testDB() throws SQLException {
-        MovieEntity movie = new MovieEntity("a1","Title 1", "Desc", "GENRE", 1999, "URLURLURL", 180, 9.1 );
+        MovieEntity movie = new MovieEntity("a1","Title 1", "Desc", Arrays.asList(Genre.DOCUMENTARY), 1999, "URLURLURL", 180, 9.1 );
         movieDao.create(movie);
     }
 
