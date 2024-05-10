@@ -13,7 +13,7 @@ public class Database {
     private static final String username = "user";
     private static final String password = "password";
     private static ConnectionSource conn;
-    Dao<MovieEntity, Long> movieDao;
+    private Dao<MovieEntity, Long> movieDao;
 
     Dao<WatchlistMovieEntity, Long> watchlistDao;
 
@@ -36,7 +36,7 @@ public class Database {
     }
 
     public void testDB() throws SQLException {
-        MovieEntity movie = new MovieEntity("Title 1", "Desc", "GENRE", 1999, "URLURLURL", 180, 9.1 );
+        MovieEntity movie = new MovieEntity("a1","Title 1", "Desc", "GENRE", 1999, "URLURLURL", 180, 9.1 );
         movieDao.create(movie);
     }
 
@@ -57,6 +57,10 @@ public class Database {
         } catch (SQLException e) {
             System.out.println("SQL Exception: " + e.getMessage());
         }
+    }
+
+    public Dao<MovieEntity, Long> getMovieDao() {
+        return this.movieDao;
     }
 
     /*
