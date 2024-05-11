@@ -7,12 +7,11 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.Objects;
 
 public class MovieRepository {
     Dao<MovieEntity, Long> dao;
 
-    public List<MovieEntity> getAllMovies() throws SQLException {
+    public java.awt.List getAllMovies() throws SQLException {
         return dao.queryForAll();
     }
 
