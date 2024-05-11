@@ -1,5 +1,8 @@
 package at.ac.fhcampuswien.fhmdb.models;
 
+import at.ac.fhcampuswien.fhmdb.database.WatchlistMovieEntity;
+
+@FunctionalInterface
 public interface ClickEventHandler<T> {
-    abstract void onClick(T t);
+     void onClick(T t);
 }

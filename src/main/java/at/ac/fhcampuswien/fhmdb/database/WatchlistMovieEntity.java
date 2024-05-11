@@ -2,6 +2,8 @@ package at.ac.fhcampuswien.fhmdb.database;
 
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
+import at.ac.fhcampuswien.fhmdb.models.Genre;
+import java.util.List;
 
 @DatabaseTable(tableName = "watchlistMovie")
 public class WatchlistMovieEntity {
@@ -93,19 +95,30 @@ public class WatchlistMovieEntity {
         this.rating = rating;
     }
 
+    public static String genresToString(List<Genre> genres){
+        if (genres.isEmpty()) {
+            return "";
+        }
+        StringBuilder sb = new StringBuilder();
+        for (Genre genre : genres) {
+            sb.append(genre).append(",");
+        }
+        sb.deleteCharAt(sb.length() - 1);
+        return sb.toString();
+    }
 
-    public WatchlistMovieEntity(String apiId, String title, String description, String genres, int releaseYear, String imgUrl, int lengthInMinutes, double rating) {
+
+    public WatchlistMovieEntity(String apiId, String title, String description, List<Genre> genres, int releaseYear, String imgUrl, int lengthInMinutes, double rating) {
         this.apiId = apiId;
         this.title = title;
         this.description = description;
-        this.genres = genres;
+        this.genres = genresToString(genres);
         this.releaseYear = releaseYear;
         this.imgUrl = imgUrl;
         this.lengthInMinutes = lengthInMinutes;
         this.rating = rating;
     }
 
-    public WatchlistMovieEntity() {
-        //no-argument constructor is needed so the object can be returned by a query
-    }
+    public WatchlistMovieEntity(){}
+
 }

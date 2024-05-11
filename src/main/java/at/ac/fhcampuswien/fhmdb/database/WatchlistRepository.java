@@ -15,14 +15,8 @@ public class WatchlistRepository {
         return null;
     }
 
-    public int addToWatchlist(WatchlistMovieEntity movie){
-        //TODO methode
-        try {
-            dao.create(movie);
-        } catch (SQLException e) {
-            System.out.println(e.getMessage());
-        }
-        return (int)movie.getId();
+    public int addToWatchlist(WatchlistMovieEntity movie) throws SQLException{
+        return dao.create(movie);
     }
 
     public int removeFromWatchlist(String apiId){
@@ -31,4 +25,9 @@ public class WatchlistRepository {
         //dao.delete();
         return 0;
     }
+
+    public WatchlistRepository(){
+        this.dao = Database.getDatabase().getWatchlistDao();
+    }
+
 }

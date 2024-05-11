@@ -1,7 +1,10 @@
 package at.ac.fhcampuswien.fhmdb;
 
 import at.ac.fhcampuswien.fhmdb.API.MovieAPI;
+import at.ac.fhcampuswien.fhmdb.database.Database;
 import at.ac.fhcampuswien.fhmdb.database.MovieRepository;
+import at.ac.fhcampuswien.fhmdb.database.WatchlistMovieEntity;
+import at.ac.fhcampuswien.fhmdb.database.WatchlistRepository;
 import at.ac.fhcampuswien.fhmdb.models.Genre;
 import at.ac.fhcampuswien.fhmdb.models.Movie;
 import at.ac.fhcampuswien.fhmdb.models.SortedState;
@@ -53,7 +56,7 @@ public class HomeController implements Initializable {
     @FXML
     public BorderPane mainPane;
 
-    public List<Movie> allMovies;
+    public static List<Movie> allMovies;
 
     protected ObservableList<Movie> observableMovies = FXCollections.observableArrayList();
 
@@ -71,17 +74,17 @@ public class HomeController implements Initializable {
         observableMovies.addAll(allMovies); // add all movies to the observable list
         sortedState = SortedState.NONE;
 
-        try {
-            new MovieRepository().addAllMovies(allMovies);
-        } catch (SQLException sqle){
-
-        }
     }
 
     public void initializeLayout() {
         movieListView.setItems(observableMovies);   // set the items of the listview to the observable list
-        movieListView.setCellFactory(movieListView -> new MovieCell()); // apply custom cells to the listview
-
+            movieListView.setCellFactory(movieListView -> {
+                try {
+                    return new MovieCell(onAddToWatchlistClicked);
+                } catch (SQLException e) {
+                    throw new RuntimeException(e);
+                }
+            }); // apply custom cells to the listview
         Object[] genres = Genre.values();   // get all genres
         genreComboBox.getItems().add("No filter");  // add "no filter" to the combobox
         genreComboBox.getItems().addAll(genres);    // add all genres to the combobox
@@ -124,6 +127,30 @@ public class HomeController implements Initializable {
     public void loadWatchlist(){
         setContentView("watchlist-view.fxml");
     }
+
+    private final ClickEventHandler onAddToWatchlistClicked = (clickedItem) ->
+    {
+        if (clickedItem instanceof Movie movie){
+            WatchlistMovieEntity watchlistMovieEntity = new WatchlistMovieEntity(
+                    movie.getId(),
+                    movie.getTitle(),
+                    movie.getDescription(),
+                    movie.getGenres(),
+                    movie.getReleaseYear(),
+                    movie.getImgUrl(),
+                    movie.getLengthInMinutes(),
+                    movie.getRating()
+            );
+
+            WatchlistRepository watchlistRepository = new WatchlistRepository();
+            try {
+                watchlistRepository.addToWatchlist(watchlistMovieEntity);
+            }catch (SQLException sqle){
+
+            }
+
+        }
+    };
     // sort movies based on sortedState
     // by default sorted state is NONE
     // afterwards it switches between ascending and descending
@@ -246,5 +273,4 @@ public class HomeController implements Initializable {
                 .toList();
     }
 
-    //TODO write methode for ClickEventHanlder<MovieCell> that adds movie to db
 }

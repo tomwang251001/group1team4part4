@@ -1,6 +1,9 @@
 package at.ac.fhcampuswien.fhmdb.ui;
 
+import at.ac.fhcampuswien.fhmdb.database.MovieRepository;
+import at.ac.fhcampuswien.fhmdb.database.WatchlistMovieEntity;
 import at.ac.fhcampuswien.fhmdb.models.Movie;
+import com.jfoenix.controls.JFXButton;
 import javafx.geometry.Insets;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -9,6 +12,8 @@ import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+
+import java.sql.SQLException;
 import java.util.stream.Collectors;
 import at.ac.fhcampuswien.fhmdb.models.ClickEventHandler;
 
@@ -18,13 +23,10 @@ public class MovieCell extends ListCell<Movie> {
     private final Label genre = new Label();
     private final Label releaseYear = new Label();
     private final Label rating = new Label();
-    private final VBox layout = new VBox(title, detail, genre, releaseYear, rating);
+    private final JFXButton watchlistBtn = new JFXButton("To Watchlist");
+    private final VBox layout = new VBox(title, detail, genre, releaseYear, rating, watchlistBtn);
 
-    private final Button watchlistBtn = new Button();
 
-    public MovieCell() {
-
-    }
 
     @Override
     protected void updateItem(Movie movie, boolean empty) {
@@ -52,7 +54,7 @@ public class MovieCell extends ListCell<Movie> {
             releaseYear.setText("Release: " + String.valueOf(movie.getReleaseYear()));
             rating.setText("Rating: " + String.valueOf(movie.getRating()));
 
-            watchlistBtn.setText("Watchlist");
+
 
             // color scheme
             title.getStyleClass().add("text-yellow");
@@ -78,11 +80,14 @@ public class MovieCell extends ListCell<Movie> {
 
 
     }
-    public MovieCell(ClickEventHandler<MovieCell> addToWatchlistClicked) {
+
+    public MovieCell(ClickEventHandler addToWatchlistClicked) throws SQLException {
         super();
-        watchlistBtn.setOnAction(actionEvent -> {
-            addToWatchlistClicked.onClick(this);
+        watchlistBtn.setOnMouseClicked(mouseEvent -> {
+            addToWatchlistClicked.onClick(getItem());
         });
+
+
     }
 }
 

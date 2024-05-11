@@ -29,6 +29,7 @@ public class Database {
             createConnectionSource();
             createTables();
             movieDao = DaoManager.createDao(conn, MovieEntity.class);
+            watchlistDao = DaoManager.createDao(conn, WatchlistMovieEntity.class);
         }catch (SQLException sqle){
             System.out.println("SQLException: " + sqle.getMessage());
         }
@@ -40,10 +41,10 @@ public class Database {
         return instance;
     }
 
-    public void testDB() throws SQLException {
+    /*public void testDB() throws SQLException {
         MovieEntity movie = new MovieEntity("a1","Title 1", "Desc", Arrays.asList(Genre.DOCUMENTARY), 1999, "URLURLURL", 180, 9.1 );
         movieDao.create(movie);
-    }
+    }*/
 
     //TODO methods
     public void createConnectionSource() throws SQLException {
@@ -55,26 +56,20 @@ public class Database {
          return conn;
     }
 
-    public void createTables(){
-        //TODO method
-        try {
-            TableUtils.createTableIfNotExists(conn, MovieEntity.class);
-        } catch (SQLException e) {
-            System.out.println("SQL Exception: " + e.getMessage());
-        }
+    public void createTables() throws SQLException{
+        TableUtils.createTableIfNotExists(conn, MovieEntity.class);
     }
 
     public Dao<MovieEntity, Long> getMovieDao() {
         return this.movieDao;
     }
 
-    /*
-    public WatchlistDao getWatchlistDao(){
-
-        //TODO method
-        return null;
+    public Dao<WatchlistMovieEntity, Long> getWatchlistDao() {
+        return this.watchlistDao;
     }
-    */
+
+
+
     /*
     public MovieDao getMovieDao(){
         //TODO method
