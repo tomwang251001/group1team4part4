@@ -11,7 +11,7 @@ import java.util.List;
 public class MovieRepository {
     Dao<MovieEntity, Long> dao;
 
-    public java.awt.List getAllMovies() throws SQLException {
+    public List<MovieEntity> getAllMovies() throws SQLException {
         return dao.queryForAll();
     }
 
