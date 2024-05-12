@@ -147,9 +147,30 @@ public class MovieEntity {
 
         ArrayList<Movie> movieList = new ArrayList<>();
 
-        //TODO write methode
-
-
+        for (MovieEntity movieEntity : movieEntities) {
+            Movie movie = new Movie(
+                    movieEntity.getApiId(),
+                    movieEntity.getTitle(),
+                    stringToGenres(movieEntity.getGenres()),
+                    movieEntity.getReleaseYear(),
+                    movieEntity.getDescription(),
+                    movieEntity.getImgUrl(),
+                    movieEntity.getLengthInMinutes(),
+                    movieEntity.getRating()
+            );
+            movieList.add(movie);
+        }
         return movieList;
+    }
+    private static List<Genre> stringToGenres(String genres) {
+        List<Genre> genreList = new ArrayList<>();
+        if (genres == null || genres.isEmpty()) {
+            return genreList;
+        }
+        String[] genreArray = genres.split(", ");
+        for (String genre : genreArray) {
+            genreList.add(Genre.valueOf(genre));
+        }
+        return genreList;
     }
 }

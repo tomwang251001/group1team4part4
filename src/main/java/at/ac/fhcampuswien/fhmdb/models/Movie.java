@@ -41,6 +41,17 @@ public class Movie {
         this.mainCast = mainCast;
         this.rating = rating;
     }
+    public Movie(String id, String title, List<Genre> genres, int releaseYear, String description, String imgUrl,
+                 int lengthInMinutes, double rating) {
+        this.id = id;
+        this.title = title;
+        this.genres = genres;
+        this.releaseYear = releaseYear;
+        this.description = description;
+        this.imgUrl = imgUrl;
+        this.lengthInMinutes = lengthInMinutes;
+        this.rating = rating;
+    }
     public static List<Movie> initializeMoviesFromAPI(){
         MovieAPI movieAPI = new MovieAPI();
         Gson gson = new Gson();
