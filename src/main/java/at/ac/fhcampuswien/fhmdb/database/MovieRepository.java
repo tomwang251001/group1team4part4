@@ -12,7 +12,9 @@ public class MovieRepository {
     Dao<MovieEntity, Long> dao;
 
     public List<MovieEntity> getAllMovies() throws SQLException {
-        return dao.queryForAll();
+
+            return dao.queryForAll();
+
     }
 
     public int removeAll() throws SQLException{

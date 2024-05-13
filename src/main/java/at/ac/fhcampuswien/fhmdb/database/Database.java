@@ -46,9 +46,7 @@ public class Database {
         movieDao.create(movie);
     }*/
 
-    //TODO methods
     public void createConnectionSource() throws SQLException {
-        //TODO method
         conn = new JdbcConnectionSource(DB_URL, username, password);
     }
 
@@ -58,6 +56,8 @@ public class Database {
 
     public void createTables() throws SQLException{
         TableUtils.createTableIfNotExists(conn, MovieEntity.class);
+        //needed for WatchlistMovieEntity table
+        TableUtils.createTableIfNotExists(conn, WatchlistMovieEntity.class);
     }
 
     public Dao<MovieEntity, Long> getMovieDao() {
@@ -67,13 +67,4 @@ public class Database {
     public Dao<WatchlistMovieEntity, Long> getWatchlistDao() {
         return this.watchlistDao;
     }
-
-
-
-    /*
-    public MovieDao getMovieDao(){
-        //TODO method
-        return null;
-    }
-    */
 }
