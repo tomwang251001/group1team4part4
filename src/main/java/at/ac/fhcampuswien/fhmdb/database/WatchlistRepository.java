@@ -10,20 +10,16 @@ public class WatchlistRepository {
 
     Dao<WatchlistMovieEntity, Long> dao;
 
-    public List<WatchlistMovieEntity> getWatchlist(){
-        //TODO methode
-        return null;
+    public List<WatchlistMovieEntity> getWatchlist() throws SQLException{
+        return dao.queryForAll();
     }
 
     public int addToWatchlist(WatchlistMovieEntity movie) throws SQLException{
         return dao.create(movie);
     }
 
-    public int removeFromWatchlist(String apiId){
-
-        //TODO methode
-        //dao.delete();
-        return 0;
+    public int removeFromWatchlist(String apiId) throws SQLException{
+        return dao.deleteById(Long.valueOf(apiId));
     }
 
     public WatchlistRepository(){

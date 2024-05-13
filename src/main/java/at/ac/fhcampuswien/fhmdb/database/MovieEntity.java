@@ -43,6 +43,19 @@ public class MovieEntity {
         //no-argument constructor is needed so the object can be returned by a query
     }
 
+    protected MovieEntity(Movie movie) { //needed additional Constructor for MovieEntity.fromMovies
+        this.id = Long.parseLong(movie.getId());
+        this.apiId = "";
+        this.title = movie.getTitle();
+        this.description = movie.getDescription();
+        this.genres = this.genresToString(movie.getGenres());
+        this.releaseYear = movie.getReleaseYear();
+        this.imgUrl = movie.getImgUrl();
+        this.lengthInMinutes = movie.getLengthInMinutes();
+        this.rating = movie.getRating();
+
+    }
+
     public long getId() {
         return id;
     }
@@ -117,24 +130,47 @@ public class MovieEntity {
         }
         StringBuilder sb = new StringBuilder();
         for (Genre genre : genres) {
-            sb.append(genre).append(",");
+            sb.append(genre).append(", ");
         }
-        sb.deleteCharAt(sb.length() - 1);
+        sb.deleteCharAt(sb.length() - 2);
         return sb.toString();
     }
     public static List<MovieEntity> fromMovies(List<Movie> movies){
         ArrayList<MovieEntity> movieEntityList = new ArrayList<MovieEntity>();
-        //TODO finish methode
-        /*
+
         for (Movie movie : movies) {
             movieEntityList.add(new MovieEntity(movie));
         }
-        */
-
         return movieEntityList;
     }
     public static List<Movie>toMovies(List<MovieEntity> movieEntities){
-        //TODO write methode
-        return null;
+
+        ArrayList<Movie> movieList = new ArrayList<>();
+
+        for (MovieEntity movieEntity : movieEntities) {
+            Movie movie = new Movie(
+                    movieEntity.getApiId(),
+                    movieEntity.getTitle(),
+                    stringToGenres(movieEntity.getGenres()),
+                    movieEntity.getReleaseYear(),
+                    movieEntity.getDescription(),
+                    movieEntity.getImgUrl(),
+                    movieEntity.getLengthInMinutes(),
+                    movieEntity.getRating()
+            );
+            movieList.add(movie);
+        }
+        return movieList;
+    }
+    private static List<Genre> stringToGenres(String genres) {
+        List<Genre> genreList = new ArrayList<>();
+        if (genres == null || genres.isEmpty()) {
+            return genreList;
+        }
+        String[] genreArray = genres.split(", ");
+        for (String genre : genreArray) {
+            genreList.add(Genre.valueOf(genre));
+        }
+        return genreList;
     }
 }
