@@ -132,14 +132,16 @@ public class HomeController implements Initializable {
     {
         if (clickedItem instanceof Movie movie){
             WatchlistMovieEntity watchlistMovieEntity = new WatchlistMovieEntity(
-                    movie.getId(),
-                    movie.getTitle(),
+                    movie.getId()
+                    /*movie.getTitle(),
                     movie.getDescription(),
                     movie.getGenres(),
                     movie.getReleaseYear(),
                     movie.getImgUrl(),
                     movie.getLengthInMinutes(),
                     movie.getRating()
+
+                     */
             );
 
             WatchlistRepository watchlistRepository = new WatchlistRepository();

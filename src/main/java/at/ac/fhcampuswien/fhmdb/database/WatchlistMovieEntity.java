@@ -7,10 +7,15 @@ import java.util.List;
 
 @DatabaseTable(tableName = "watchlistMovie")
 public class WatchlistMovieEntity {
-    @DatabaseField(generatedId = true)
+    @DatabaseField()
     private long id;
     @DatabaseField()
     private String apiId;
+    /* Wird nicht benötigt!
+    Angabe:
+    Klasse WatchlistMovieEntity: enthält nur einen Verweis auf die Filme der Watchlist. zB die ApiId
+    der ausgewählten MovieEntities.
+
     @DatabaseField()
     private String title;
     @DatabaseField()
@@ -25,8 +30,11 @@ public class WatchlistMovieEntity {
     private int lengthInMinutes;
     @DatabaseField()
     private double rating;
+    */
 
-
+    public void setId() {
+        this.id = id;
+    }
     public long getId() {
         return id;
     }
@@ -38,7 +46,7 @@ public class WatchlistMovieEntity {
     public void setApiId(String apiId) {
         this.apiId = apiId;
     }
-
+    /*
     public String getTitle() {
         return title;
     }
@@ -106,10 +114,11 @@ public class WatchlistMovieEntity {
         sb.deleteCharAt(sb.length() - 1);
         return sb.toString();
     }
+    */
 
-
-    public WatchlistMovieEntity(String apiId, String title, String description, List<Genre> genres, int releaseYear, String imgUrl, int lengthInMinutes, double rating) {
-        this.apiId = apiId;
+    public WatchlistMovieEntity(String apiId //, String title, String description, List<Genre> genres, int releaseYear, String imgUrl, int lengthInMinutes, double rating) {
+        ){this.apiId = apiId;
+        /*
         this.title = title;
         this.description = description;
         this.genres = genresToString(genres);
@@ -117,8 +126,11 @@ public class WatchlistMovieEntity {
         this.imgUrl = imgUrl;
         this.lengthInMinutes = lengthInMinutes;
         this.rating = rating;
+         */
     }
-
+    public WatchlistMovieEntity(long id){
+        this.id =id;
+    }
     public WatchlistMovieEntity(){}
 
 }
