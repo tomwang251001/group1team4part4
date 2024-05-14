@@ -169,7 +169,7 @@ public class MovieEntity {
         }
         String[] genreArray = genres.split(", ");
         for (String genre : genreArray) {
-            genreList.add(Genre.valueOf(genre));
+                genreList.add(Genre.valueOf(genre.trim()));
         }
         return genreList;
     }

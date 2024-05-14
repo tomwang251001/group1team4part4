@@ -73,7 +73,6 @@ public class HomeController implements Initializable {
         observableMovies.clear();
         observableMovies.addAll(allMovies); // add all movies to the observable list
         sortedState = SortedState.NONE;
-
     }
 
     public void initializeLayout() {
@@ -120,6 +119,7 @@ public class HomeController implements Initializable {
         } catch (IOException e){
             Alert errorAlert = new Alert(Alert.AlertType.ERROR, "Error loading view: " + e.getMessage(), ButtonType.OK);
             errorAlert.show();
+            e.printStackTrace();
         }
 
     }
@@ -132,14 +132,7 @@ public class HomeController implements Initializable {
     {
         if (clickedItem instanceof Movie movie){
             WatchlistMovieEntity watchlistMovieEntity = new WatchlistMovieEntity(
-                    movie.getId(),
-                    movie.getTitle(),
-                    movie.getDescription(),
-                    movie.getGenres(),
-                    movie.getReleaseYear(),
-                    movie.getImgUrl(),
-                    movie.getLengthInMinutes(),
-                    movie.getRating()
+                    movie.getId()
             );
 
             WatchlistRepository watchlistRepository = new WatchlistRepository();

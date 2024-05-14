@@ -58,6 +58,7 @@ public class Database {
 
     public void createTables() throws SQLException{
         TableUtils.createTableIfNotExists(conn, MovieEntity.class);
+        TableUtils.createTableIfNotExists(conn, WatchlistMovieEntity.class);
     }
 
     public Dao<MovieEntity, Long> getMovieDao() {

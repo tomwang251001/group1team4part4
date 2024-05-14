@@ -86,7 +86,7 @@ public class Movie {
     public List<Genre> getGenres() {
         return genres;
     }
-
+/*
     public static List<Movie> initializeMovies(){
         List<Movie> movies = new ArrayList<>();
         movies.add(new Movie(
@@ -112,7 +112,7 @@ public class Movie {
 
         return movies;
     }
-
+*/
     public String getId() {
         return id;
     }
