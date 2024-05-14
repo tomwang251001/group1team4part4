@@ -106,5 +106,30 @@ public class WatchlistController extends HomeController {
         ratingComboBox.getItems().addAll("No filter",1,2,3,4,5,6,7,8,9);
 
     }
+
+    @Override
+    public void searchBtnClicked(ActionEvent actionEvent) {
+        super.searchBtnClicked(actionEvent);
+    }
+
+    @Override
+    public void clearBtnClicked(ActionEvent actionEvent) {
+        super.clearBtnClicked(actionEvent);
+    }
+
+    @Override
+    public void applyAllFilters(String searchQuery, Object genre, Object releaseYear, int rating) {
+        super.applyAllFilters(searchQuery, genre, releaseYear, rating);
+    }
+
+    @Override
+    public void sortBtnClicked(ActionEvent actionEvent) {
+        super.sortBtnClicked(actionEvent);
+    }
+
+    @Override
+    public ObservableList<Movie> getObservableMovies() {
+        return observableMovies;
+    }
 }
 

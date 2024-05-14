@@ -16,9 +16,7 @@ public class MovieRepository {
     Dao<MovieEntity, Long> dao;
 
     public List<MovieEntity> getAllMovies() throws SQLException {
-
             return dao.queryForAll();
-
     }
 
     public int removeAll() throws SQLException{
@@ -49,7 +47,6 @@ public class MovieRepository {
 
     public int addAllMovies(List<Movie> movies) throws SQLException {
         Collection<MovieEntity> moviesE = new ArrayList<>();
-
         for (Movie movie : movies){
             moviesE.add(new MovieEntity(movie.id, movie.title, movie.description, movie.genres, movie.releaseYear, movie.imgUrl, movie.lengthInMinutes, movie.rating));
         }
