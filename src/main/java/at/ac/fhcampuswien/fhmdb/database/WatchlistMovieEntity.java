@@ -7,7 +7,7 @@ import java.util.List;
 
 @DatabaseTable(tableName = "watchlistMovie")
 public class WatchlistMovieEntity {
-    @DatabaseField()
+    @DatabaseField(generatedId = true)
     private long id;
     @DatabaseField()
     private String apiId;

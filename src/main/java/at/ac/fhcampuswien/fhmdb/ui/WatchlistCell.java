@@ -1,5 +1,6 @@
 package at.ac.fhcampuswien.fhmdb.ui;
 
+import at.ac.fhcampuswien.fhmdb.models.ClickEventHandler;
 import at.ac.fhcampuswien.fhmdb.models.Movie;
 import com.jfoenix.controls.JFXButton;
 import javafx.geometry.Insets;
@@ -10,6 +11,7 @@ import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 
+import java.sql.SQLException;
 import java.util.stream.Collectors;
 
 public class WatchlistCell extends ListCell<Movie> {
@@ -77,4 +79,12 @@ public class WatchlistCell extends ListCell<Movie> {
             setGraphic(layout);
         }
     }
+
+    public WatchlistCell(ClickEventHandler deleteFromWatchlistClicked) throws SQLException {
+        super();
+        delFromWatchlistBtn.setOnMouseClicked(mouseEvent -> {
+            deleteFromWatchlistClicked.onClick(getItem());
+        });
+    }
+
 }

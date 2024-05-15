@@ -4,6 +4,7 @@ import at.ac.fhcampuswien.fhmdb.database.MovieEntity;
 import at.ac.fhcampuswien.fhmdb.database.MovieRepository;
 import at.ac.fhcampuswien.fhmdb.database.WatchlistMovieEntity;
 import at.ac.fhcampuswien.fhmdb.database.WatchlistRepository;
+import at.ac.fhcampuswien.fhmdb.models.ClickEventHandler;
 import at.ac.fhcampuswien.fhmdb.models.Genre;
 import at.ac.fhcampuswien.fhmdb.models.Movie;
 import at.ac.fhcampuswien.fhmdb.models.SortedState;
@@ -61,7 +62,7 @@ public class WatchlistController extends HomeController {
         movieListView.setItems(observableMovies);   // set the items of the listview to the observable list
         movieListView.setCellFactory(movieListView -> {
             try {
-                return new WatchlistCell();
+                return new WatchlistCell(onDeleteFromWatchlistClicked);
             } catch (Exception e) {
                 throw new RuntimeException(e);
             }
@@ -83,6 +84,18 @@ public class WatchlistController extends HomeController {
         ratingComboBox.getItems().addAll("No filter", 1, 2, 3, 4, 5, 6, 7, 8, 9);
 
     }
+
+    private final ClickEventHandler onDeleteFromWatchlistClicked = (clickedItem) ->
+    {
+        if (clickedItem instanceof Movie){
+            try {
+                watchlistRepository.removeFromWatchlist(((Movie) clickedItem).id);
+            }catch (SQLException sqle){
+                sqle.printStackTrace();
+            }
+        }
+    loadWatchlist();
+    };
 
     public List<Movie> filterByReleaseYear(List<Movie> movies, String releaseYear) {
         if (releaseYear == null) {

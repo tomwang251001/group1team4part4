@@ -86,8 +86,7 @@ public class MovieCell extends ListCell<Movie> {
         watchlistBtn.setOnMouseClicked(mouseEvent -> {
             addToWatchlistClicked.onClick(getItem());
         });
-
-
     }
+
 }
 
