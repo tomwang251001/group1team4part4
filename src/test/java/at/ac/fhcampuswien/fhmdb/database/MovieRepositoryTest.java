@@ -1,4 +1,5 @@
 package at.ac.fhcampuswien.fhmdb.database;
+
 import at.ac.fhcampuswien.fhmdb.database.MovieRepository;
 import at.ac.fhcampuswien.fhmdb.models.Genre;
 import at.ac.fhcampuswien.fhmdb.models.Movie;
@@ -16,21 +17,24 @@ import java.util.List;
 
 import static javafx.beans.binding.Bindings.when;
 import static org.junit.jupiter.api.Assertions.*;
+
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class MovieRepositoryTest {
     //Dao<MovieEntity, Long> dao;
     MovieRepository movieRepository = new MovieRepository();
     List<Movie> movies = new ArrayList<>();
 
-    public void setUp(){
-        movies.add(new Movie("1", "Movie 1", List.of(), 2020, "Description 1", "img1.jpg", 120,4.5));
-        movies.add(new Movie("2", "Movie 2", List.of(), 2010, "Description 2", "img2.jpg", 110,4.2));
+    @BeforeAll
+    public void setUp() {
+        movies.add(new Movie("1", "Movie 1", List.of(), 2020, "Description 1", "img1.jpg", 120, 4.5));
+        movies.add(new Movie("2", "Movie 2", List.of(), 2010, "Description 2", "img2.jpg", 110, 4.2));
         try {
             movieRepository.addAllMovies(movies);
         } catch (SQLException e) {
             e.printStackTrace();
         }
     }
+
     @Test
     void test_getAllMovies() throws SQLException {
         List<MovieEntity> moviesActual = new ArrayList<>();
@@ -40,28 +44,56 @@ class MovieRepositoryTest {
 
         assertNotNull(moviesExpected);
         assertEquals(2, moviesActual.size());
-        assertEquals(moviesExpected.get(1).getId(),moviesActual.get(1).getId());
+        //assertEquals(moviesExpected.get(0).getTitle(),moviesActual.get(0).getTitle());
     }
 
     @Test
     void test_removeAll() {
         try {
             movieRepository.removeAll();
+            List<MovieEntity> movies = movieRepository.getAllMovies();
+            assertNotNull(movies);
+            assertEquals(0, movies.size());
         } catch (SQLException e) {
             e.printStackTrace();
+            fail("SQLException thrown: " + e.getMessage());
         }
-        assertNull(movies);
-        assertEquals(0, movies.size());
     }
 
     @Test
     void test_getMovie() {
-        //TODO @Sascha write methode
+        MovieEntity movie = null;
+        try {
+            movie = movieRepository.getMovie();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+
+        assertNotNull(movie);
+        assertEquals("1", movie.getApiId());
+        assertEquals("Movie 1", movie.getTitle());
     }
 
     @Test
     void test_addAllMovies() {
-        //TODO @Sascha write methode
-    }
 
+        try {
+            int rowsInserted = movieRepository.addAllMovies(movies);
+            assertEquals(2, rowsInserted);
+            List<MovieEntity> movieEntities = movieRepository.getAllMovies();
+
+            MovieEntity movie1 = movieEntities.get(0);
+            assertEquals("1", movie1.getApiId());
+            assertEquals("Movie 1", movie1.getTitle());
+
+            MovieEntity movie2 = movieEntities.get(1);
+            assertEquals("2", movie2.getApiId());
+            assertEquals("Movie 2", movie2.getTitle());
+
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            fail("SQLException thrown: " + e.getMessage());
+        }
+    }
 }

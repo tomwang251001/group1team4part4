@@ -106,5 +106,75 @@ public class WatchlistController extends HomeController {
         ratingComboBox.getItems().addAll("No filter",1,2,3,4,5,6,7,8,9);
 
     }
+
+    @Override
+    public void searchBtnClicked(ActionEvent actionEvent) {
+        super.searchBtnClicked(actionEvent);
+    }
+
+    @Override
+    public void clearBtnClicked(ActionEvent actionEvent) {
+        super.clearBtnClicked(actionEvent);
+    }
+
+    @Override
+    public void applyAllFilters(String searchQuery, Object genre, Object releaseYear, int rating) {
+        super.applyAllFilters(searchQuery, genre, releaseYear, rating);
+    }
+
+    @Override
+    public void sortBtnClicked(ActionEvent actionEvent) {
+        super.sortBtnClicked(actionEvent);
+    }
+
+    @Override
+    String getMostPopularActor(List<Movie> movies) {
+        return super.getMostPopularActor(movies);
+    }
+
+    @Override
+    int getLongestMovieTitle(List<Movie> movies) {
+        return super.getLongestMovieTitle(movies);
+    }
+
+    @Override
+    long countMoviesFrom(List<Movie> movies, String director) {
+        return super.countMoviesFrom(movies, director);
+    }
+
+    @Override
+    public List<Movie> getMoviesBetweenYears(List<Movie> movies, int startYear, int endYear) {
+        return super.getMoviesBetweenYears(movies, startYear, endYear);
+    }
+
+    @Override
+    public List<String> getTitle(List<Movie> movies) {
+        return super.getTitle(movies);
+    }
+
+    @Override
+    public ObservableList<Movie> getObservableMovies() {
+        return observableMovies;
+    }
+
+    @Override
+    public void sortMovies() {
+        super.sortMovies();
+    }
+
+    @Override
+    public void setContentView(String pathToView) {
+        super.setContentView(pathToView);
+    }
+
+    @Override
+    public void loadWatchlist() {
+        super.loadWatchlist();
+    }
+
+    @Override
+    public void sortMovies(SortedState sortDirection) {
+        super.sortMovies(sortDirection);
+    }
 }
 
