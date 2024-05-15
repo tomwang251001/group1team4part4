@@ -21,7 +21,14 @@ public class WatchlistRepository {
     }
 
     public int addToWatchlist(WatchlistMovieEntity movie) throws SQLException{
-        return dao.create(movie);
+
+        if (dao.queryForMatching(movie).size() == 0){
+            System.out.println("hi");
+            return dao.create(movie);
+        }else {
+            System.out.println("Movie already exists in Watchlist");
+            return 0;
+        }
     }
 
     public int removeFromWatchlist(String apiId) throws SQLException{
