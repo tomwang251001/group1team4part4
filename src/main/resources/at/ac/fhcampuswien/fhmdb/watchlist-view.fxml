@@ -32,13 +32,13 @@
     </HBox>
     <HBox spacing="5.0" styleClass="background-black" stylesheets="@styles.css">
         <children>
-            <JFXButton fx:id="sortBtn" styleClass="background-yellow" stylesheets="@styles.css" text="Sort"/>
+            <JFXButton fx:id="sortBtn" styleClass="background-yellow" stylesheets="@styles.css" text="Sort" onAction="#sortBtnClicked"/>
             <TextField fx:id="searchField" prefHeight="25.0" prefWidth="170.0" promptText="Search FHMDb" />
             <JFXComboBox fx:id="genreComboBox" focusColor="#f5c518" styleClass="filter-combo-box" stylesheets="@styles.css" />
             <JFXComboBox fx:id="releaseYearComboBox" focusColor="#f5c518" styleClass="filter-combo-box" stylesheets="@styles.css" />
             <JFXComboBox fx:id="ratingComboBox" focusColor="#f5c518" styleClass="filter-combo-box" stylesheets="@styles.css" />
-            <JFXButton fx:id="searchBtn" styleClass="background-yellow" stylesheets="@styles.css" text="Filter"/>
-            <JFXButton fx:id="clearBtn" styleClass="background-yellow" stylesheets="@styles.css" text="Clear"/>
+            <JFXButton fx:id="searchBtn" styleClass="background-yellow" stylesheets="@styles.css" text="Filter" onAction="#searchBtnClicked"/>
+            <JFXButton fx:id="clearBtn" styleClass="background-yellow" stylesheets="@styles.css" text="Clear" onAction="#clearBtnClicked"/>
             <JFXButton fx:id="homeBtn" styleClass="background-yellow" stylesheets="@styles.css" text="Home" onAction="#loadHomePage"/>
         </children>
         <VBox.margin>

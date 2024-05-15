@@ -118,7 +118,7 @@ public class HomeController implements Initializable {
         try{
             mainPane.setCenter(fxmlLoader.load());
         } catch (IOException e){
-            Alert errorAlert = new Alert(Alert.AlertType.ERROR, "Error loading view: " + e.getMessage(), ButtonType.OK);
+            Alert errorAlert = new Alert(Alert.AlertType.ERROR, "Error loading view: ", ButtonType.OK);
             errorAlert.show();
         }
 

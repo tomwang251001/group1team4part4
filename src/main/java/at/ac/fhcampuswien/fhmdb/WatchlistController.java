@@ -21,7 +21,9 @@ import javafx.scene.layout.BorderPane;
 
 import java.net.URL;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.ResourceBundle;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -29,31 +31,6 @@ import java.util.stream.IntStream;
 
 
 public class WatchlistController extends HomeController {
-    @FXML
-    public JFXButton searchBtn;
-    @FXML
-    public JFXButton clearBtn;
-
-    @FXML
-    public TextField searchField;
-
-    @FXML
-    public JFXListView movieListView;
-
-    @FXML
-    public JFXComboBox genreComboBox;
-
-    @FXML
-    public JFXComboBox<Integer> releaseYearComboBox;
-    @FXML
-    public JFXComboBox ratingComboBox;
-    @FXML
-    public JFXButton sortBtn;
-    @FXML
-    public BorderPane mainPane;
-    protected ObservableList<Movie> observableMovies = FXCollections.observableArrayList();
-
-    protected SortedState sortedState;
     WatchlistRepository watchlistRepository = new WatchlistRepository();
     MovieRepository movieRepository = new MovieRepository();
 
@@ -63,16 +40,16 @@ public class WatchlistController extends HomeController {
         initializeState();
     }
 
-    public void loadHomePage(){
+    public void loadHomePage() {
         setContentView("home-view.fxml");
     }
+
     @Override
     public void initializeState() {
         try {
             List<MovieEntity> movies = movieRepository.IdToMovie(watchlistRepository.getWatchlist());
             allMovies = MovieEntity.toMovies(movies);
-            System.out.println("success");
-        }catch(SQLException sqle){
+        } catch (SQLException sqle) {
             sqle.printStackTrace();
         }
         observableMovies.clear();
@@ -103,78 +80,84 @@ public class WatchlistController extends HomeController {
 
 
         ratingComboBox.setPromptText("Filter by Rating");
-        ratingComboBox.getItems().addAll("No filter",1,2,3,4,5,6,7,8,9);
+        ratingComboBox.getItems().addAll("No filter", 1, 2, 3, 4, 5, 6, 7, 8, 9);
 
     }
 
-    @Override
-    public void searchBtnClicked(ActionEvent actionEvent) {
-        super.searchBtnClicked(actionEvent);
+    public List<Movie> filterByReleaseYear(List<Movie> movies, String releaseYear) {
+        if (releaseYear == null) {
+            return movies;
+        }
+
+        if (movies == null) {
+            throw new IllegalArgumentException("movies must not be null");
+        }
+        ;
+
+        return movies.stream()
+                .filter(Objects::nonNull)
+                .filter(movie -> movie.getReleaseYear() == Integer.valueOf(releaseYear))
+                .toList();
     }
 
-    @Override
-    public void clearBtnClicked(ActionEvent actionEvent) {
-        super.clearBtnClicked(actionEvent);
+    public List<Movie> filterByGenre(List<Movie> movies, Genre genre) {
+        if (genre == null) return movies;
+
+        if (movies == null) {
+            throw new IllegalArgumentException("movies must not be null");
+        }
+
+        return movies.stream()
+                .filter(Objects::nonNull)
+                .filter(movie -> movie.getGenres().contains(genre))
+                .toList();
+    }
+
+    public List<Movie> filterByQuery(List<Movie> movies, String query) {
+        if (query == null || query.isEmpty()) return movies;
+
+        if (movies == null) {
+            throw new IllegalArgumentException("movies must not be null");
+        }
+
+        return movies.stream()
+                .filter(Objects::nonNull)
+                .filter(movie ->
+                        movie.getTitle().toLowerCase().contains(query.toLowerCase()) ||
+                                movie.getDescription().toLowerCase().contains(query.toLowerCase())
+                )
+                .toList();
+    }
+
+    public List<Movie> getMoviesByRating(List<Movie> movies, int rating) {
+        return movies.stream()
+                .filter(movie -> movie
+                        .getRating() >= rating)
+                .collect(Collectors.toList());
     }
 
     @Override
     public void applyAllFilters(String searchQuery, Object genre, Object releaseYear, int rating) {
-        super.applyAllFilters(searchQuery, genre, releaseYear, rating);
+        List<Movie> filteredMovies = new ArrayList<>();
+        filteredMovies = filterByQuery(allMovies, searchQuery);
+        filteredMovies = filterByGenre(filteredMovies, (Genre) genre);
+        if (releaseYear != null) {
+            filteredMovies = filterByReleaseYear(filteredMovies, releaseYear.toString());
+        }
+        filteredMovies = getMoviesByRating(filteredMovies, rating);
+        observableMovies.clear();
+        observableMovies.addAll(filteredMovies);
     }
 
-    @Override
-    public void sortBtnClicked(ActionEvent actionEvent) {
-        super.sortBtnClicked(actionEvent);
-    }
+    public void clearBtnClicked(ActionEvent actionEvent) {
+        genreComboBox.setValue(null);
+        releaseYearComboBox.setValue(null);
+        ratingComboBox.setValue(null);
+        searchField.clear();
 
-    @Override
-    String getMostPopularActor(List<Movie> movies) {
-        return super.getMostPopularActor(movies);
-    }
-
-    @Override
-    int getLongestMovieTitle(List<Movie> movies) {
-        return super.getLongestMovieTitle(movies);
-    }
-
-    @Override
-    long countMoviesFrom(List<Movie> movies, String director) {
-        return super.countMoviesFrom(movies, director);
-    }
-
-    @Override
-    public List<Movie> getMoviesBetweenYears(List<Movie> movies, int startYear, int endYear) {
-        return super.getMoviesBetweenYears(movies, startYear, endYear);
-    }
-
-    @Override
-    public List<String> getTitle(List<Movie> movies) {
-        return super.getTitle(movies);
-    }
-
-    @Override
-    public ObservableList<Movie> getObservableMovies() {
-        return observableMovies;
-    }
-
-    @Override
-    public void sortMovies() {
-        super.sortMovies();
-    }
-
-    @Override
-    public void setContentView(String pathToView) {
-        super.setContentView(pathToView);
-    }
-
-    @Override
-    public void loadWatchlist() {
-        super.loadWatchlist();
-    }
-
-    @Override
-    public void sortMovies(SortedState sortDirection) {
-        super.sortMovies(sortDirection);
+        observableMovies.clear();
+        observableMovies.addAll(allMovies);
     }
 }
+
 
