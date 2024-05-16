@@ -1,4 +1,5 @@
 package at.ac.fhcampuswien.fhmdb.API;
+import at.ac.fhcampuswien.fhmdb.Exceptions.MovieApiException;
 import at.ac.fhcampuswien.fhmdb.models.Movie;
 import com.google.gson.*;
 import okhttp3.*;
@@ -11,7 +12,7 @@ public class MovieAPI{
     //public static final String CONNECTOR = "&";
     private static final String URL = "http://prog2.fh-campuswien.ac.at/movies";
 
-    public String getRequest() {
+    public String getRequest() throws MovieApiException {
         final OkHttpClient client = new OkHttpClient();
         Request request = new Request.Builder()
                 .url(URL)
@@ -19,18 +20,17 @@ public class MovieAPI{
                 .build();
 
         Call call = client.newCall(request);
-        try (Response response = call.execute()) {
-
+        try {
+            Response response = call.execute();
             return response.body().string();
         } catch (IOException e) {
-
-            return ("Something went wrong");
+            throw new MovieApiException("error in getRequest()", e);
         }
 
     }
 
 
-        public static String searchMovies(String query, String genre, int releaseYear, double ratingFrom)  {
+        public static String searchMovies(String query, String genre, int releaseYear, double ratingFrom) throws MovieApiException  {
 
             String url = URL;
 
@@ -52,10 +52,11 @@ public class MovieAPI{
                     .url(url)
                     .addHeader("User-Agent", "http.agent")
                     .build();
-            try (Response response = client.newCall(request).execute()) {
+            try{
+                Response response = client.newCall(request).execute();
                 return response.body().string();
             } catch (IOException e) {
-                return ("Error");
+                throw new MovieApiException("error in searchMovies()", e);
             }
         }
 

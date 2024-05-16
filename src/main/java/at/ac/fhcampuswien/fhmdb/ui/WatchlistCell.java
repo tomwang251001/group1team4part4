@@ -80,7 +80,7 @@ public class WatchlistCell extends ListCell<Movie> {
         }
     }
 
-    public WatchlistCell(ClickEventHandler deleteFromWatchlistClicked) throws SQLException {
+    public WatchlistCell(ClickEventHandler deleteFromWatchlistClicked){
         super();
         delFromWatchlistBtn.setOnMouseClicked(mouseEvent -> {
             deleteFromWatchlistClicked.onClick(getItem());

@@ -81,7 +81,7 @@ public class MovieCell extends ListCell<Movie> {
 
     }
 
-    public MovieCell(ClickEventHandler addToWatchlistClicked) throws SQLException {
+    public MovieCell(ClickEventHandler addToWatchlistClicked){
         super();
         watchlistBtn.setOnMouseClicked(mouseEvent -> {
             addToWatchlistClicked.onClick(getItem());

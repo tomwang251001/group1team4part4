@@ -6,6 +6,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+
+import at.ac.fhcampuswien.fhmdb.Exceptions.MovieApiException;
 import com.google.gson.*;
 
 
@@ -52,7 +54,7 @@ public class Movie {
         this.lengthInMinutes = lengthInMinutes;
         this.rating = rating;
     }
-    public static List<Movie> initializeMoviesFromAPI(){
+    public static List<Movie> initializeMoviesFromAPI() throws MovieApiException {
         MovieAPI movieAPI = new MovieAPI();
         Gson gson = new Gson();
 

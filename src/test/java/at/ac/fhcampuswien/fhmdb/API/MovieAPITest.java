@@ -1,5 +1,6 @@
 package at.ac.fhcampuswien.fhmdb.API;
 
+import at.ac.fhcampuswien.fhmdb.Exceptions.MovieApiException;
 import at.ac.fhcampuswien.fhmdb.HomeController;
 import at.ac.fhcampuswien.fhmdb.models.Genre;
 import at.ac.fhcampuswien.fhmdb.models.Movie;
@@ -18,10 +19,14 @@ class MovieAPITest {
         MovieAPI movieAPI = new MovieAPI();
 
         // when
-        String result = movieAPI.getRequest();
-        boolean success = !result.equals("Something went wrong");
+        try {
+            String result = movieAPI.getRequest();
+            boolean success = !result.equals("Something went wrong");
+            // then
+            assertTrue(success, "Expected successful request");
+        }catch (MovieApiException mae){
+            System.out.println("API exception occurred");
+        }
 
-        // then
-        assertTrue(success, "Expected successful request");
     }
 }

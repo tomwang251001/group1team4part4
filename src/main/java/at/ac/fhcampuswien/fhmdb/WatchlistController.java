@@ -1,9 +1,7 @@
 package at.ac.fhcampuswien.fhmdb;
 
-import at.ac.fhcampuswien.fhmdb.database.MovieEntity;
-import at.ac.fhcampuswien.fhmdb.database.MovieRepository;
-import at.ac.fhcampuswien.fhmdb.database.WatchlistMovieEntity;
-import at.ac.fhcampuswien.fhmdb.database.WatchlistRepository;
+import at.ac.fhcampuswien.fhmdb.Exceptions.DatabaseException;
+import at.ac.fhcampuswien.fhmdb.database.*;
 import at.ac.fhcampuswien.fhmdb.models.ClickEventHandler;
 import at.ac.fhcampuswien.fhmdb.models.Genre;
 import at.ac.fhcampuswien.fhmdb.models.Movie;
@@ -17,6 +15,8 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
 
@@ -50,8 +50,9 @@ public class WatchlistController extends HomeController {
         try {
             List<MovieEntity> movies = movieRepository.IdToMovie(watchlistRepository.getWatchlist());
             allMovies = MovieEntity.toMovies(movies);
-        } catch (SQLException sqle) {
-            sqle.printStackTrace();
+        } catch (DatabaseException dbe) {
+            Alert errorAlert = new Alert(Alert.AlertType.ERROR, "Error loading watch-list", ButtonType.OK);
+            errorAlert.show();
         }
         observableMovies.clear();
         observableMovies.addAll(allMovies); // add all movies to the observable list
@@ -60,13 +61,7 @@ public class WatchlistController extends HomeController {
 
     public void initializeLayout() {
         movieListView.setItems(observableMovies);   // set the items of the listview to the observable list
-        movieListView.setCellFactory(movieListView -> {
-            try {
-                return new WatchlistCell(onDeleteFromWatchlistClicked);
-            } catch (Exception e) {
-                throw new RuntimeException(e);
-            }
-        }); // apply custom cells to the listview
+        movieListView.setCellFactory(movieListView -> new WatchlistCell(onDeleteFromWatchlistClicked)); // apply custom cells to the listview
         Object[] genres = Genre.values();   // get all genres
         genreComboBox.getItems().add("No filter");  // add "no filter" to the combobox
         genreComboBox.getItems().addAll(genres);    // add all genres to the combobox
@@ -90,64 +85,13 @@ public class WatchlistController extends HomeController {
         if (clickedItem instanceof Movie){
             try {
                 watchlistRepository.removeFromWatchlist(((Movie) clickedItem).id);
-            }catch (SQLException sqle){
-                sqle.printStackTrace();
+            }catch (DatabaseException dbe){
+                Alert errorAlert = new Alert(Alert.AlertType.ERROR, "Error removing movie", ButtonType.OK);
+                errorAlert.show();
             }
         }
     loadWatchlist();
     };
-
-    public List<Movie> filterByReleaseYear(List<Movie> movies, String releaseYear) {
-        if (releaseYear == null) {
-            return movies;
-        }
-
-        if (movies == null) {
-            throw new IllegalArgumentException("movies must not be null");
-        }
-        ;
-
-        return movies.stream()
-                .filter(Objects::nonNull)
-                .filter(movie -> movie.getReleaseYear() == Integer.valueOf(releaseYear))
-                .toList();
-    }
-
-    public List<Movie> filterByGenre(List<Movie> movies, Genre genre) {
-        if (genre == null) return movies;
-
-        if (movies == null) {
-            throw new IllegalArgumentException("movies must not be null");
-        }
-
-        return movies.stream()
-                .filter(Objects::nonNull)
-                .filter(movie -> movie.getGenres().contains(genre))
-                .toList();
-    }
-
-    public List<Movie> filterByQuery(List<Movie> movies, String query) {
-        if (query == null || query.isEmpty()) return movies;
-
-        if (movies == null) {
-            throw new IllegalArgumentException("movies must not be null");
-        }
-
-        return movies.stream()
-                .filter(Objects::nonNull)
-                .filter(movie ->
-                        movie.getTitle().toLowerCase().contains(query.toLowerCase()) ||
-                                movie.getDescription().toLowerCase().contains(query.toLowerCase())
-                )
-                .toList();
-    }
-
-    public List<Movie> getMoviesByRating(List<Movie> movies, int rating) {
-        return movies.stream()
-                .filter(movie -> movie
-                        .getRating() >= rating)
-                .collect(Collectors.toList());
-    }
 
     @Override
     public void applyAllFilters(String searchQuery, Object genre, Object releaseYear, int rating) {

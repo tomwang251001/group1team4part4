@@ -1,14 +1,18 @@
 package at.ac.fhcampuswien.fhmdb.database;
 
+import at.ac.fhcampuswien.fhmdb.Exceptions.DatabaseException;
 import at.ac.fhcampuswien.fhmdb.models.Genre;
 import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.dao.DaoManager;
 import com.j256.ormlite.jdbc.JdbcConnectionSource;
 import com.j256.ormlite.support.ConnectionSource;
 import com.j256.ormlite.table.TableUtils;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
 
 import java.sql.Array;
 import java.sql.SQLException;
+import java.sql.Savepoint;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -24,18 +28,18 @@ public class Database {
 
     private static Database instance;
 
-    private Database(){
+    private Database() throws DatabaseException{
+        createConnectionSource();
+        createTables();
         try {
-            createConnectionSource();
-            createTables();
             movieDao = DaoManager.createDao(conn, MovieEntity.class);
             watchlistDao = DaoManager.createDao(conn, WatchlistMovieEntity.class);
         }catch (SQLException sqle){
-            System.out.println("SQLException: " + sqle.getMessage());
+            throw new DatabaseException("error in creating dao", sqle);
         }
     }
-    public static Database getDatabase(){
-        if(instance == null){
+    public static Database getDatabase() throws DatabaseException {
+        if (instance == null) {
             instance = new Database();
         }
         return instance;
@@ -46,18 +50,26 @@ public class Database {
         movieDao.create(movie);
     }*/
 
-    public void createConnectionSource() throws SQLException {
-        conn = new JdbcConnectionSource(DB_URL, username, password);
+    public void createConnectionSource() throws DatabaseException {
+        try {
+            conn = new JdbcConnectionSource(DB_URL, username, password);
+        }catch (SQLException sqle){
+            throw new DatabaseException("error in createConnectionSource()", sqle);
+        }
     }
 
     public ConnectionSource getConnectionSource(){
          return conn;
     }
 
-    public void createTables() throws SQLException{
-        TableUtils.createTableIfNotExists(conn, MovieEntity.class);
-        //needed for WatchlistMovieEntity table
-        TableUtils.createTableIfNotExists(conn, WatchlistMovieEntity.class);
+    public void createTables() throws DatabaseException {
+        try {
+            TableUtils.createTableIfNotExists(conn, MovieEntity.class);
+            //needed for WatchlistMovieEntity table
+            TableUtils.createTableIfNotExists(conn, WatchlistMovieEntity.class);
+        }catch (SQLException sqle){
+            throw new DatabaseException("error in createTables()", sqle);
+        }
     }
 
     public Dao<MovieEntity, Long> getMovieDao() {

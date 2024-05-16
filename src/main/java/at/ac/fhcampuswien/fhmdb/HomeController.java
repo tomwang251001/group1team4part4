@@ -1,10 +1,9 @@
 package at.ac.fhcampuswien.fhmdb;
 
 import at.ac.fhcampuswien.fhmdb.API.MovieAPI;
-import at.ac.fhcampuswien.fhmdb.database.Database;
-import at.ac.fhcampuswien.fhmdb.database.MovieRepository;
-import at.ac.fhcampuswien.fhmdb.database.WatchlistMovieEntity;
-import at.ac.fhcampuswien.fhmdb.database.WatchlistRepository;
+import at.ac.fhcampuswien.fhmdb.Exceptions.DatabaseException;
+import at.ac.fhcampuswien.fhmdb.Exceptions.MovieApiException;
+import at.ac.fhcampuswien.fhmdb.database.*;
 import at.ac.fhcampuswien.fhmdb.models.Genre;
 import at.ac.fhcampuswien.fhmdb.models.Movie;
 import at.ac.fhcampuswien.fhmdb.models.SortedState;
@@ -62,6 +61,9 @@ public class HomeController implements Initializable {
 
     protected SortedState sortedState;
 
+    MovieRepository movieRepository = new MovieRepository();
+    MovieEntity movieEntity = new MovieEntity();
+
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         initializeState();
@@ -69,7 +71,19 @@ public class HomeController implements Initializable {
     }
 
     public void initializeState() {
-        allMovies = Movie.initializeMoviesFromAPI();
+        try {
+            allMovies = Movie.initializeMoviesFromAPI();
+        }catch (MovieApiException mae){
+            Alert errorAlert = new Alert(Alert.AlertType.ERROR, "Connection to API failed. Load movies from database", ButtonType.OK);
+            errorAlert.show();
+            try {
+                allMovies = MovieEntity.toMovies(movieRepository.getAllMovies());
+            }catch (DatabaseException dbe){
+                Alert errorAlert2 = new Alert(Alert.AlertType.ERROR, "Movies failed to load", ButtonType.OK);
+                errorAlert2.show();
+            }
+        }
+
         observableMovies.clear();
         observableMovies.addAll(allMovies); // add all movies to the observable list
         sortedState = SortedState.NONE;
@@ -78,13 +92,7 @@ public class HomeController implements Initializable {
 
     public void initializeLayout() {
         movieListView.setItems(observableMovies);   // set the items of the listview to the observable list
-            movieListView.setCellFactory(movieListView -> {
-                try {
-                    return new MovieCell(onAddToWatchlistClicked);
-                } catch (SQLException e) {
-                    throw new RuntimeException(e);
-                }
-            }); // apply custom cells to the listview
+            movieListView.setCellFactory(movieListView ->  new MovieCell(onAddToWatchlistClicked)); // apply custom cells to the listview
         Object[] genres = Genre.values();   // get all genres
         genreComboBox.getItems().add("No filter");  // add "no filter" to the combobox
         genreComboBox.getItems().addAll(genres);    // add all genres to the combobox
@@ -118,10 +126,9 @@ public class HomeController implements Initializable {
         try{
             mainPane.setCenter(fxmlLoader.load());
         } catch (IOException e){
-            Alert errorAlert = new Alert(Alert.AlertType.ERROR, "Error loading view: ", ButtonType.OK);
+            Alert errorAlert = new Alert(Alert.AlertType.ERROR, "Error loading view", ButtonType.OK);
             errorAlert.show();
         }
-
     }
 
     public void loadWatchlist(){
@@ -133,22 +140,14 @@ public class HomeController implements Initializable {
         if (clickedItem instanceof Movie movie){
             WatchlistMovieEntity watchlistMovieEntity = new WatchlistMovieEntity(
                     movie.getId()
-                    /*movie.getTitle(),
-                    movie.getDescription(),
-                    movie.getGenres(),
-                    movie.getReleaseYear(),
-                    movie.getImgUrl(),
-                    movie.getLengthInMinutes(),
-                    movie.getRating()
-
-                     */
             );
 
             WatchlistRepository watchlistRepository = new WatchlistRepository();
             try {
                 watchlistRepository.addToWatchlist(watchlistMovieEntity);
-            }catch (SQLException sqle){
-
+            }catch (DatabaseException dbe){
+                Alert errorAlert = new Alert(Alert.AlertType.ERROR, "Error adding movie to watchlist", ButtonType.OK);
+                errorAlert.show();
             }
 
         }
@@ -194,9 +193,21 @@ public class HomeController implements Initializable {
 
 
         Gson gson = new Gson();
-        filteredMovies = List.of(gson.fromJson(MovieAPI.searchMovies(searchQuery, genrefilter, year, ratingfilter), Movie[].class));
-        observableMovies.clear();
-        observableMovies.addAll(filteredMovies);
+        try {
+            filteredMovies = List.of(gson.fromJson(MovieAPI.searchMovies(searchQuery, genrefilter, year, ratingfilter), Movie[].class));
+            observableMovies.clear();
+            observableMovies.addAll(filteredMovies);
+        }catch (MovieApiException mae){
+            filteredMovies = filterByQuery(allMovies, searchQuery);
+            filteredMovies = filterByGenre(filteredMovies, (Genre) genre);
+            if (releaseYear != null) {
+                filteredMovies = filterByReleaseYear(filteredMovies, releaseYear.toString());
+            }
+            filteredMovies = getMoviesByRating(filteredMovies, rating);
+            observableMovies.clear();
+            observableMovies.addAll(filteredMovies);
+        }
+
     }
 
     public void searchBtnClicked(ActionEvent actionEvent) {
@@ -261,18 +272,64 @@ public class HomeController implements Initializable {
                 .collect(Collectors.toList());
     }
 
-    /*public List<Movie> getMoviesByRating(List<Movie> movies, int rating){
-        return movies.stream()
-                .filter(movie -> movie
-                        .getRating() >= rating )
-                .collect(Collectors.toList());
-    }*/
 
 
     public List<String> getTitle(List<Movie> movies){
         return movies.stream()
                 .map(Movie::getTitle)
                 .toList();
+    }
+
+    public List<Movie> filterByReleaseYear(List<Movie> movies, String releaseYear) {
+        if (releaseYear == null) {
+            return movies;
+        }
+
+        if (movies == null) {
+            throw new IllegalArgumentException("movies must not be null");
+        }
+        ;
+
+        return movies.stream()
+                .filter(Objects::nonNull)
+                .filter(movie -> movie.getReleaseYear() == Integer.valueOf(releaseYear))
+                .toList();
+    }
+
+    public List<Movie> filterByGenre(List<Movie> movies, Genre genre) {
+        if (genre == null) return movies;
+
+        if (movies == null) {
+            throw new IllegalArgumentException("movies must not be null");
+        }
+
+        return movies.stream()
+                .filter(Objects::nonNull)
+                .filter(movie -> movie.getGenres().contains(genre))
+                .toList();
+    }
+
+    public List<Movie> filterByQuery(List<Movie> movies, String query) {
+        if (query == null || query.isEmpty()) return movies;
+
+        if (movies == null) {
+            throw new IllegalArgumentException("movies must not be null");
+        }
+
+        return movies.stream()
+                .filter(Objects::nonNull)
+                .filter(movie ->
+                        movie.getTitle().toLowerCase().contains(query.toLowerCase()) ||
+                                movie.getDescription().toLowerCase().contains(query.toLowerCase())
+                )
+                .toList();
+    }
+
+    public List<Movie> getMoviesByRating(List<Movie> movies, int rating) {
+        return movies.stream()
+                .filter(movie -> movie
+                        .getRating() >= rating)
+                .collect(Collectors.toList());
     }
 
 }
