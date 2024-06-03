@@ -1,4 +1,8 @@
 package at.ac.fhcampuswien.fhmdb.pattern.state;
 
-public class defaultState {
+import at.ac.fhcampuswien.fhmdb.models.Movie;
+import javafx.collections.ObservableList;
+
+public interface defaultState {
+    ObservableList<Movie> sort(ObservableList<Movie> observableMovies);
 }
