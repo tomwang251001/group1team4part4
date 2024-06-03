@@ -7,6 +7,7 @@ import at.ac.fhcampuswien.fhmdb.database.*;
 import at.ac.fhcampuswien.fhmdb.models.Genre;
 import at.ac.fhcampuswien.fhmdb.models.Movie;
 import at.ac.fhcampuswien.fhmdb.models.SortedState;
+import at.ac.fhcampuswien.fhmdb.pattern.observer.Observer;
 import at.ac.fhcampuswien.fhmdb.ui.MovieCell;
 import com.google.gson.Gson;
 import com.jfoenix.controls.JFXButton;
@@ -31,7 +32,7 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import at.ac.fhcampuswien.fhmdb.models.ClickEventHandler;
 
-public class HomeController implements Initializable {
+public class HomeController implements Initializable, Observer {
     @FXML
     public JFXButton searchBtn;
     @FXML
@@ -63,6 +64,8 @@ public class HomeController implements Initializable {
 
     MovieRepository movieRepository = new MovieRepository();
     MovieEntity movieEntity = new MovieEntity();
+
+    public void update(){};
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {

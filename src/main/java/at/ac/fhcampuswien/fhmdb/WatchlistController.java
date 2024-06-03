@@ -6,6 +6,7 @@ import at.ac.fhcampuswien.fhmdb.models.ClickEventHandler;
 import at.ac.fhcampuswien.fhmdb.models.Genre;
 import at.ac.fhcampuswien.fhmdb.models.Movie;
 import at.ac.fhcampuswien.fhmdb.models.SortedState;
+import at.ac.fhcampuswien.fhmdb.pattern.observer.Observer;
 import at.ac.fhcampuswien.fhmdb.ui.MovieCell;
 import at.ac.fhcampuswien.fhmdb.ui.WatchlistCell;
 import com.jfoenix.controls.JFXButton;
@@ -31,9 +32,11 @@ import java.util.stream.IntStream;
 
 
 
-public class WatchlistController extends HomeController {
+public class WatchlistController extends HomeController implements Observer {
     WatchlistRepository watchlistRepository = new WatchlistRepository();
     MovieRepository movieRepository = new MovieRepository();
+
+    public void update(){};
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
