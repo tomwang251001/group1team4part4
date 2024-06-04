@@ -8,6 +8,10 @@ import at.ac.fhcampuswien.fhmdb.models.Genre;
 import at.ac.fhcampuswien.fhmdb.models.Movie;
 import at.ac.fhcampuswien.fhmdb.models.SortedState;
 import at.ac.fhcampuswien.fhmdb.pattern.observer.Observer;
+import at.ac.fhcampuswien.fhmdb.pattern.state.ascendingState;
+import at.ac.fhcampuswien.fhmdb.pattern.state.defaultState;
+import at.ac.fhcampuswien.fhmdb.pattern.state.descendingState;
+import at.ac.fhcampuswien.fhmdb.pattern.state.manageState;
 import at.ac.fhcampuswien.fhmdb.ui.MovieCell;
 import com.google.gson.Gson;
 import com.jfoenix.controls.JFXButton;
@@ -61,6 +65,7 @@ public class HomeController implements Initializable, Observer {
     protected ObservableList<Movie> observableMovies = FXCollections.observableArrayList();
 
     protected SortedState sortedState;
+    protected manageState defaultSortState;
 
     MovieRepository movieRepository = new MovieRepository();
     MovieEntity movieEntity = new MovieEntity();
@@ -115,6 +120,7 @@ public class HomeController implements Initializable, Observer {
     protected List<Movie> getObservableMovies() {
         return observableMovies;
     }
+
     public void sortMovies(){
         if (sortedState == SortedState.NONE || sortedState == SortedState.DESCENDING) {
             sortMovies(SortedState.ASCENDING);
@@ -166,6 +172,15 @@ public class HomeController implements Initializable, Observer {
             observableMovies.sort(Comparator.comparing(Movie::getTitle).reversed());
             sortedState = SortedState.DESCENDING;
         }
+    }
+    //TODO try this in Code for GUI
+    public ObservableList<Movie> sortMovies(ObservableList<Movie> observableMovies, SortedState sortDirection){
+        if (sortDirection == SortedState.ASCENDING) {
+            defaultSortState.setCurrentState(new ascendingState());
+        } else {
+            defaultSortState.setCurrentState(new descendingState());
+        }
+        return defaultSortState.sort(observableMovies);
     }
 
     public void applyAllFilters(String searchQuery, Object genre, Object releaseYear, int rating) {
