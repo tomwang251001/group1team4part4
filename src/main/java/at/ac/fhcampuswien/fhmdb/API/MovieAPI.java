@@ -1,9 +1,12 @@
 package at.ac.fhcampuswien.fhmdb.API;
 import at.ac.fhcampuswien.fhmdb.Exceptions.MovieApiException;
 import at.ac.fhcampuswien.fhmdb.models.Movie;
+import at.ac.fhcampuswien.fhmdb.pattern.builder.urlBuilder;
 import com.google.gson.*;
+import com.google.gson.reflect.TypeToken;
 import okhttp3.*;
 import java.io.IOException;
+import java.lang.reflect.Type;
 import java.util.*;
 
 
@@ -11,6 +14,11 @@ public class MovieAPI{
 
     //public static final String CONNECTOR = "&";
     private static final String URL = "http://prog2.fh-campuswien.ac.at/movies";
+    private final OkHttpClient httpClient;
+
+    public MovieAPI(OkHttpClient httpClient) {
+        this.httpClient = httpClient;
+    }
 
     public String getRequest() throws MovieApiException {
         final OkHttpClient client = new OkHttpClient();
@@ -23,12 +31,11 @@ public class MovieAPI{
         try {
             Response response = call.execute();
             return response.body().string();
-        } catch (IOException e) {
-            throw new MovieApiException("error in getRequest()", e);
+        } catch (IOException ioe) {
+            throw new MovieApiException("An error occurred while getRequest()", ioe);
         }
 
     }
-
 
         public static String searchMovies(String query, String genre, int releaseYear, double ratingFrom) throws MovieApiException  {
 
@@ -59,5 +66,10 @@ public class MovieAPI{
                 throw new MovieApiException("error in searchMovies()", e);
             }
         }
+
+    public List<Movie> get() throws MovieApiException {
+        urlBuilder urlBuilder = new urlBuilder();
+        return get();
+    }
 
 }

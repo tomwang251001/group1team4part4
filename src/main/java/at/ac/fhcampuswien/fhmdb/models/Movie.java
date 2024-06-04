@@ -2,13 +2,11 @@ package at.ac.fhcampuswien.fhmdb.models;
 
 import at.ac.fhcampuswien.fhmdb.API.MovieAPI;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import at.ac.fhcampuswien.fhmdb.Exceptions.MovieApiException;
 import com.google.gson.*;
+import okhttp3.OkHttpClient;
 
 
 public class Movie {
@@ -55,7 +53,8 @@ public class Movie {
         this.rating = rating;
     }
     public static List<Movie> initializeMoviesFromAPI() throws MovieApiException {
-        MovieAPI movieAPI = new MovieAPI();
+        OkHttpClient httpClient = new OkHttpClient();
+        MovieAPI movieAPI = new MovieAPI(httpClient);
         Gson gson = new Gson();
 
         String json = movieAPI.getRequest();
