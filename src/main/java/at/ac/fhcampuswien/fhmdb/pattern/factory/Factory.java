@@ -4,7 +4,7 @@ import at.ac.fhcampuswien.fhmdb.HomeController;
 
 import javax.security.auth.callback.Callback;
 
-public class Factory implements Callback<Class<?>, Object> {
+public class Factory{//} implements Callback<Class<?>, Object> {
     private static HomeController homeController;
     public HomeController getHomeController(){
         if (homeController == null) {
@@ -12,7 +12,7 @@ public class Factory implements Callback<Class<?>, Object> {
         }
         return homeController;
     }
-    @Override
+    //@Override
     public Object call(Class<?> aClass) {
         try {
             return getHomeController();

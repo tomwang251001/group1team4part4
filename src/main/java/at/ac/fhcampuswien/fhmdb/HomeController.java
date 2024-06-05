@@ -69,7 +69,7 @@ public class HomeController implements Initializable, Observer {
     protected manageState defaultSortState;
 
     MovieRepository movieRepository = new MovieRepository();
-    WatchlistRepository watchlistRepository = new WatchlistRepository();
+    WatchlistRepository watchlistRepository;
 
     @Override
     public void update(String msg){
@@ -82,7 +82,13 @@ public class HomeController implements Initializable, Observer {
     public void initialize(URL url, ResourceBundle resourceBundle) {
         initializeState();
         initializeLayout();
-        watchlistRepository.registerObserver(this);
+        try {
+            watchlistRepository = WatchlistRepository.getWatchlistRepository();
+            watchlistRepository.registerObserver(this);
+
+        } catch (DatabaseException e) {
+            throw new RuntimeException(e);
+        }
         System.out.println(watchlistRepository.observers.size());
     }
 
@@ -159,7 +165,12 @@ public class HomeController implements Initializable, Observer {
                     movie.getId()
             );
 
-            WatchlistRepository watchlistRepository = new WatchlistRepository();
+            WatchlistRepository watchlistRepository = null;
+            try {
+                watchlistRepository = WatchlistRepository.getWatchlistRepository();
+            } catch (DatabaseException e) {
+                throw new RuntimeException(e);
+            }
             try {
                 watchlistRepository.addToWatchlist(watchlistMovieEntity);
             }catch (DatabaseException dbe){

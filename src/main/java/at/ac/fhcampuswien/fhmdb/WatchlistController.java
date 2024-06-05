@@ -33,7 +33,16 @@ import java.util.stream.IntStream;
 
 
 public class WatchlistController extends HomeController implements Observer {
-    WatchlistRepository watchlistRepository = new WatchlistRepository();
+    WatchlistRepository watchlistRepository;
+
+    {
+        try {
+            watchlistRepository = WatchlistRepository.getWatchlistRepository();
+        } catch (DatabaseException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     MovieRepository movieRepository = new MovieRepository();
 
     public void update(){};
