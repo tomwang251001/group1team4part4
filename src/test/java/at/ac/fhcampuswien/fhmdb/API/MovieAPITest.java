@@ -1,14 +1,8 @@
 package at.ac.fhcampuswien.fhmdb.API;
 
 import at.ac.fhcampuswien.fhmdb.Exceptions.MovieApiException;
-import at.ac.fhcampuswien.fhmdb.HomeController;
-import at.ac.fhcampuswien.fhmdb.models.Genre;
-import at.ac.fhcampuswien.fhmdb.models.Movie;
+import okhttp3.OkHttpClient;
 import org.junit.jupiter.api.Test;
-
-import java.util.Arrays;
-import java.util.List;
-import java.util.function.BooleanSupplier;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -16,7 +10,8 @@ class MovieAPITest {
     @Test
     public void test_getRequest() {
         //given
-        MovieAPI movieAPI = new MovieAPI();
+        OkHttpClient httpClient = new OkHttpClient();
+        MovieAPI movieAPI = new MovieAPI(httpClient);
 
         // when
         try {
