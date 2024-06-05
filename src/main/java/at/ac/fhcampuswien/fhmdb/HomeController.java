@@ -7,6 +7,7 @@ import at.ac.fhcampuswien.fhmdb.database.*;
 import at.ac.fhcampuswien.fhmdb.models.Genre;
 import at.ac.fhcampuswien.fhmdb.models.Movie;
 import at.ac.fhcampuswien.fhmdb.models.SortedState;
+import at.ac.fhcampuswien.fhmdb.pattern.observer.Observable;
 import at.ac.fhcampuswien.fhmdb.pattern.observer.Observer;
 import at.ac.fhcampuswien.fhmdb.ui.MovieCell;
 import com.google.gson.Gson;
@@ -63,14 +64,21 @@ public class HomeController implements Initializable, Observer {
     protected SortedState sortedState;
 
     MovieRepository movieRepository = new MovieRepository();
-    MovieEntity movieEntity = new MovieEntity();
+    WatchlistRepository watchlistRepository = new WatchlistRepository();
 
-    public void update(){};
+    @Override
+    public void update(String msg){
+        System.out.println("update");
+        Alert errorAlert = new Alert(Alert.AlertType.ERROR, msg, ButtonType.OK);
+        errorAlert.show();
+    }
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         initializeState();
         initializeLayout();
+        watchlistRepository.registerObserver(this);
+        System.out.println(watchlistRepository.observers.size());
     }
 
     public void initializeState() {

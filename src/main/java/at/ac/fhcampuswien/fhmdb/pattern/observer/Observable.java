@@ -1,7 +1,7 @@
 package at.ac.fhcampuswien.fhmdb.pattern.observer;
 
 public interface Observable {
-    void add(Observer controller);
-    void remove(Observer controller);
-    void notifyObservers();
+    void registerObserver(Observer observer);
+    void unregisterObserver(Observer observer);
+    void notifyObservers(String msg);
 }

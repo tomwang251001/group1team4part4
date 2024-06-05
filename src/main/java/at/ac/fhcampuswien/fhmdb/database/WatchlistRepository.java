@@ -1,6 +1,7 @@
 package at.ac.fhcampuswien.fhmdb.database;
 
 import at.ac.fhcampuswien.fhmdb.Exceptions.DatabaseException;
+import at.ac.fhcampuswien.fhmdb.HomeController;
 import at.ac.fhcampuswien.fhmdb.models.Movie;
 import at.ac.fhcampuswien.fhmdb.pattern.observer.Observable;
 import at.ac.fhcampuswien.fhmdb.pattern.observer.Observer;
@@ -15,23 +16,41 @@ import javafx.scene.control.ButtonType;
 import java.io.Serializable;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
+import java.util.Objects;
 
 public class WatchlistRepository implements Observable {
+    public List<Observer> observers;
 
-    List<Observer> observers = new ArrayList<>();
-
-    public void add(Observer controller){
-        observers.add(controller);
-    };
-    public void remove(Observer controller){
-        observers.remove(controller);
-    };
-    public void notifyObservers(){
-        for (Observer observer : observers) {
-            observer.update();
+    public WatchlistRepository(){
+        observers = new ArrayList<>();
+        try {
+            this.dao = Database.getDatabase().getWatchlistDao();
+        }catch (DatabaseException dbe){
+            Alert errorAlert = new Alert(Alert.AlertType.ERROR, "Error establishing database connection", ButtonType.OK);
+            errorAlert.show();
         }
-    };
+    }
+
+
+    @Override
+    public void registerObserver(Observer observer) {
+        observers.add(observer);
+        System.out.println("Observer registered: " + observer);
+        System.out.println("Current observers: " + observers.size());
+    }
+    @Override
+    public void unregisterObserver(Observer observer){
+        observers.remove(observer);
+    }
+    @Override
+    public void notifyObservers(String msg){
+        System.out.println(observers.size());
+        for (Observer observer : observers) {
+            observer.update(msg);
+        }
+    }
 
     Dao<WatchlistMovieEntity, Long> dao;
 
@@ -47,10 +66,10 @@ public class WatchlistRepository implements Observable {
     public int addToWatchlist(WatchlistMovieEntity movie) throws DatabaseException {
         try {
             if (dao.queryForMatching(movie).size() == 0) {
+                notifyObservers("added movie");
                 return dao.create(movie);
             } else {
-                Alert errorAlert = new Alert(Alert.AlertType.ERROR, "Movie already exists in database", ButtonType.OK);
-                errorAlert.show();
+                notifyObservers("already in watchlist");
                 return 0;
             }
         } catch (SQLException sqle) {
@@ -60,6 +79,7 @@ public class WatchlistRepository implements Observable {
     }
 
     public int removeFromWatchlist(String apiId) throws DatabaseException {
+        notifyObservers("removed from watchlist");
         try {
             QueryBuilder<WatchlistMovieEntity, Long> queryBuilder = dao.queryBuilder();
             Where<WatchlistMovieEntity, Long> where = queryBuilder.where();
@@ -75,13 +95,6 @@ public class WatchlistRepository implements Observable {
             throw new DatabaseException("error in removeFromWatchlist()", sqle);
         }
     }
-    public WatchlistRepository(){
-        try {
-            this.dao = Database.getDatabase().getWatchlistDao();
-        }catch (DatabaseException dbe){
-            Alert errorAlert = new Alert(Alert.AlertType.ERROR, "Error establishing database connection", ButtonType.OK);
-            errorAlert.show();
-        }
-    }
+
 
 }
