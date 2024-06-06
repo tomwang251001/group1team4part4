@@ -69,13 +69,21 @@ public class HomeController implements Initializable, Observer {
     protected manageState defaultSortState;
 
     MovieRepository movieRepository = MovieRepository.getMovieRepository();
-    WatchlistRepository watchlistRepository = new WatchlistRepository();
+    WatchlistRepository watchlistRepository = WatchlistRepository.getInstance();
+
+    public HomeController(){
+        if (watchlistRepository.observers.size() < 2){
+            watchlistRepository.registerObserver(this);
+        }
+    }
 
     @Override
     public void update(String msg){
         System.out.println("update");
-        Alert errorAlert = new Alert(Alert.AlertType.ERROR, msg, ButtonType.OK);
-        errorAlert.show();
+        if (msg == "Movie added to Watchlist" || msg == "Movie already exists in Watchlist"){
+            Alert errorAlert = new Alert(Alert.AlertType.CONFIRMATION, msg, ButtonType.OK);
+            errorAlert.show();
+        }
     }
 
 
@@ -83,8 +91,6 @@ public class HomeController implements Initializable, Observer {
     public void initialize(URL url, ResourceBundle resourceBundle) {
         initializeState();
         initializeLayout();
-        watchlistRepository.registerObserver(this);
-        System.out.println(watchlistRepository.getObserversList());
     }
 
     public void initializeState() {
@@ -150,6 +156,7 @@ public class HomeController implements Initializable, Observer {
     }
 
     public void loadWatchlist(){
+
         setContentView("watchlist-view.fxml");
     }
 
@@ -160,7 +167,7 @@ public class HomeController implements Initializable, Observer {
                     movie.getId()
             );
 
-            WatchlistRepository watchlistRepository = new WatchlistRepository();
+            WatchlistRepository watchlistRepository = WatchlistRepository.getInstance();
             try {
                 watchlistRepository.addToWatchlist(watchlistMovieEntity);
             }catch (DatabaseException dbe){

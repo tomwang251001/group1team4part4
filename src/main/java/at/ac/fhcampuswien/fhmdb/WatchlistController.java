@@ -33,10 +33,16 @@ import java.util.stream.IntStream;
 
 
 public class WatchlistController extends HomeController implements Observer {
-    WatchlistRepository watchlistRepository = new WatchlistRepository();
+    WatchlistRepository watchlistRepository = WatchlistRepository.getInstance();
     MovieRepository movieRepository = MovieRepository.getMovieRepository();
+    @Override
+    public void update(String msg){
+        if (msg == "Movie removed from Watchlist"){
+            Alert errorAlert = new Alert(Alert.AlertType.CONFIRMATION, msg, ButtonType.OK);
+            errorAlert.show();
+        }
+    };
 
-    public void update(){};
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {

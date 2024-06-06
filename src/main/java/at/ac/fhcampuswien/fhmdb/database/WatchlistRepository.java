@@ -2,6 +2,7 @@ package at.ac.fhcampuswien.fhmdb.database;
 
 import at.ac.fhcampuswien.fhmdb.Exceptions.DatabaseException;
 import at.ac.fhcampuswien.fhmdb.HomeController;
+import at.ac.fhcampuswien.fhmdb.WatchlistController;
 import at.ac.fhcampuswien.fhmdb.models.Movie;
 import at.ac.fhcampuswien.fhmdb.pattern.observer.Observable;
 import at.ac.fhcampuswien.fhmdb.pattern.observer.Observer;
@@ -21,9 +22,11 @@ import java.util.List;
 import java.util.Objects;
 
 public class WatchlistRepository implements Observable {
+
+    private static WatchlistRepository instance;
     public List<Observer> observers;
 
-    public WatchlistRepository(){
+    private WatchlistRepository(){
         observers = new ArrayList<>();
         try {
             this.dao = Database.getDatabase().getWatchlistDao();
@@ -31,6 +34,13 @@ public class WatchlistRepository implements Observable {
             Alert errorAlert = new Alert(Alert.AlertType.ERROR, "Error establishing database connection", ButtonType.OK);
             errorAlert.show();
         }
+    }
+
+    public static WatchlistRepository getInstance(){
+        if (instance == null) {
+            instance = new WatchlistRepository();
+        }
+        return instance;
     }
 
     public List<Observer> getObserversList(){
@@ -70,10 +80,10 @@ public class WatchlistRepository implements Observable {
     public int addToWatchlist(WatchlistMovieEntity movie) throws DatabaseException {
         try {
             if (dao.queryForMatching(movie).size() == 0) {
-                notifyObservers("added movie");
+                notifyObservers("Movie added to Watchlist");
                 return dao.create(movie);
             } else {
-                notifyObservers("already in watchlist");
+                notifyObservers("Movie already exists in Watchlist");
                 return 0;
             }
         } catch (SQLException sqle) {
@@ -83,7 +93,7 @@ public class WatchlistRepository implements Observable {
     }
 
     public int removeFromWatchlist(String apiId) throws DatabaseException {
-        notifyObservers("removed from watchlist");
+        notifyObservers("Movie removed from Watchlist");
         try {
             QueryBuilder<WatchlistMovieEntity, Long> queryBuilder = dao.queryBuilder();
             Where<WatchlistMovieEntity, Long> where = queryBuilder.where();
