@@ -2,10 +2,9 @@ package at.ac.fhcampuswien.fhmdb.pattern.factory;
 
 import at.ac.fhcampuswien.fhmdb.HomeController;
 
-import javax.security.auth.callback.Callback;
+import javafx.util.Callback;
 
 public class MyFactory implements Callback<Class<?>, Object> {
-    // TODO: create MyCtrl as singleton instance
     private static HomeController instanceOfHomecontroller;
     public HomeController getHomeController(){
         if (instanceOfHomecontroller == null) {
@@ -15,9 +14,8 @@ public class MyFactory implements Callback<Class<?>, Object> {
     }
     @Override
     public Object call(Class<?> aClass) {
-    // TODO: check if MyCtrl is already instantiated
         try{
-            return (getHomeController()); aClass.getDeclaredConstructor().newInstance();
+            return  getHomeController();
         } catch (Exception e) {
             e.printStackTrace();
         }
