@@ -82,6 +82,13 @@ public class HomeController implements Initializable, Observer {
         }
         this.currentState = new unsortedState();
     }
+    private static HomeController instance;
+    public static HomeController getInstance() {
+        if (instance == null) {
+            instance = new HomeController();
+        }
+        return instance;
+    }
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
