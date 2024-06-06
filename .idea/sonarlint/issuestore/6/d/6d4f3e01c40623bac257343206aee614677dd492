@@ -1,0 +1,13 @@
+
+{
+java:S4165$"`Remove this useless assignment; "id" already holds the assigned value along all execution paths.(£©èÚþÿÿÿÿ
+V	java:S125"<This block of commented-out lines of code should be removed.(åõò¹ýÿÿÿÿ
+Q	java:S1252"<This block of commented-out lines of code should be removed.(òô¢Ë
+Q	java:S125w"<This block of commented-out lines of code should be removed.(¯¼ÈÒ
+Q	java:S125z"<This block of commented-out lines of code should be removed.(¦žÓ×
+J
+java:S1656$"/Remove or correct this useless self-assignment.(£©èÚþÿÿÿÿ
+X
+java:S1128"BRemove this unused import 'at.ac.fhcampuswien.fhmdb.models.Genre'.(—ÙË
+F
+java:S1128"+Remove this unused import 'java.util.List'.(Õë±Äøÿÿÿÿ

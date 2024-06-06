@@ -9,10 +9,7 @@ import at.ac.fhcampuswien.fhmdb.models.Movie;
 import at.ac.fhcampuswien.fhmdb.models.SortedState;
 import at.ac.fhcampuswien.fhmdb.pattern.observer.Observable;
 import at.ac.fhcampuswien.fhmdb.pattern.observer.Observer;
-import at.ac.fhcampuswien.fhmdb.pattern.state.ascendingState;
-import at.ac.fhcampuswien.fhmdb.pattern.state.defaultState;
-import at.ac.fhcampuswien.fhmdb.pattern.state.descendingState;
-import at.ac.fhcampuswien.fhmdb.pattern.state.manageState;
+import at.ac.fhcampuswien.fhmdb.pattern.state.*;
 import at.ac.fhcampuswien.fhmdb.ui.MovieCell;
 import com.google.gson.Gson;
 import com.jfoenix.controls.JFXButton;
@@ -66,26 +63,18 @@ public class HomeController implements Initializable, Observer {
     protected ObservableList<Movie> observableMovies = FXCollections.observableArrayList();
 
     protected SortedState sortedState;
-    protected manageState defaultSortState;
 
     MovieRepository movieRepository = MovieRepository.getMovieRepository();
     WatchlistRepository watchlistRepository = WatchlistRepository.getInstance();
+
+    private State currentState;
 
     public HomeController(){
         if (watchlistRepository.observers.size() < 2){
             watchlistRepository.registerObserver(this);
         }
+        this.currentState = new unsortedState();
     }
-
-    @Override
-    public void update(String msg){
-        System.out.println("update");
-        if (msg == "Movie added to Watchlist" || msg == "Movie already exists in Watchlist"){
-            Alert errorAlert = new Alert(Alert.AlertType.CONFIRMATION, msg, ButtonType.OK);
-            errorAlert.show();
-        }
-    }
-
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -132,17 +121,19 @@ public class HomeController implements Initializable, Observer {
         ratingComboBox.setPromptText("Filter by Rating");
         ratingComboBox.getItems().addAll("No filter",1,2,3,4,5,6,7,8,9);
     }
+
+    @Override
+    public void update(String msg){
+        if (msg == "Movie added to Watchlist" || msg == "Movie already exists in Watchlist"){
+            Alert errorAlert = new Alert(Alert.AlertType.CONFIRMATION, msg, ButtonType.OK);
+            errorAlert.show();
+        }
+    }
+
     protected List<Movie> getObservableMovies() {
         return observableMovies;
     }
 
-    public void sortMovies(){
-        if (sortedState == SortedState.NONE || sortedState == SortedState.DESCENDING) {
-            sortMovies(SortedState.ASCENDING);
-        } else if (sortedState == SortedState.ASCENDING) {
-            sortMovies(SortedState.DESCENDING);
-        }
-    }
 
     public void setContentView(String pathToView){
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource(pathToView));
@@ -180,24 +171,15 @@ public class HomeController implements Initializable, Observer {
     // sort movies based on sortedState
     // by default sorted state is NONE
     // afterwards it switches between ascending and descending
-    public void sortMovies(SortedState sortDirection) {
-        if (sortDirection == SortedState.ASCENDING) {
-            observableMovies.sort(Comparator.comparing(Movie::getTitle));
-            sortedState = SortedState.ASCENDING;
-        } else {
-            observableMovies.sort(Comparator.comparing(Movie::getTitle).reversed());
-            sortedState = SortedState.DESCENDING;
-        }
+
+    public void sort(){
+        currentState.changeState(this);
+        currentState.sort(observableMovies);
+    }
+    public void changeState(State state){
+        this.currentState = state;
     }
     //TODO try this in Code for GUI
-    public ObservableList<Movie> sortMovies(ObservableList<Movie> observableMovies, SortedState sortDirection){
-        if (sortDirection == SortedState.ASCENDING) {
-            defaultSortState.setCurrentState(new ascendingState());
-        } else {
-            defaultSortState.setCurrentState(new descendingState());
-        }
-        return defaultSortState.sort(observableMovies);
-    }
 
     public void applyAllFilters(String searchQuery, Object genre, Object releaseYear, int rating) {
         List<Movie> filteredMovies;
@@ -256,7 +238,7 @@ public class HomeController implements Initializable, Observer {
         }
 
         applyAllFilters(searchQuery, genre, releaseYear, rating);
-        sortMovies(sortedState);
+        sort();
     }
 
     public void clearBtnClicked(ActionEvent actionEvent){
@@ -266,11 +248,12 @@ public class HomeController implements Initializable, Observer {
         searchField.clear();
 
         observableMovies.clear();
+        changeState(new unsortedState());
         observableMovies.addAll(allMovies);
     }
 
     public void sortBtnClicked(ActionEvent actionEvent) {
-        sortMovies();
+        sort();
     }
 
     String getMostPopularActor(List<Movie> movies){

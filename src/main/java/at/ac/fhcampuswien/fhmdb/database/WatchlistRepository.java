@@ -57,6 +57,8 @@ public class WatchlistRepository implements Observable {
     @Override
     public void unregisterObserver(Observer observer){
         observers.remove(observer);
+        System.out.println("Observer unregistered: " + observer);
+        System.out.println("Current observers: " + observers.size());
     }
     @Override
     public void notifyObservers(String msg){
