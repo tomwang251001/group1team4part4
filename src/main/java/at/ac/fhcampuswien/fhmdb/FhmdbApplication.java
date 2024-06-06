@@ -3,24 +3,24 @@ package at.ac.fhcampuswien.fhmdb;
 import at.ac.fhcampuswien.fhmdb.Exceptions.DatabaseException;
 import at.ac.fhcampuswien.fhmdb.database.Database;
 import at.ac.fhcampuswien.fhmdb.database.MovieRepository;
-import at.ac.fhcampuswien.fhmdb.database.WatchlistRepository;
-import at.ac.fhcampuswien.fhmdb.pattern.observer.Observable;
-import at.ac.fhcampuswien.fhmdb.pattern.observer.Observer;
+import at.ac.fhcampuswien.fhmdb.pattern.factory.MyFactory;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.stage.Stage;
+import javafx.util.Callback;
 
 import java.io.IOException;
-import java.sql.SQLException;
 import java.util.Objects;
 
 public class FhmdbApplication extends Application {
     @Override
     public void start(Stage stage) throws IOException {
+        MyFactory myFactory = new MyFactory();
         FXMLLoader fxmlLoader = new FXMLLoader(FhmdbApplication.class.getResource("home-view.fxml"));
+        fxmlLoader.setControllerFactory(myFactory);
         Scene scene = new Scene(fxmlLoader.load(), 890, 620);
         scene.getStylesheets().add(Objects.requireNonNull(FhmdbApplication.class.getResource("styles.css")).toExternalForm());
         stage.setTitle("FHMDb!");
