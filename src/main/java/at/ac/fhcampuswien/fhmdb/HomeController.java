@@ -3,13 +3,19 @@ package at.ac.fhcampuswien.fhmdb;
 import at.ac.fhcampuswien.fhmdb.API.MovieAPI;
 import at.ac.fhcampuswien.fhmdb.Exceptions.DatabaseException;
 import at.ac.fhcampuswien.fhmdb.Exceptions.MovieApiException;
-import at.ac.fhcampuswien.fhmdb.database.*;
+import at.ac.fhcampuswien.fhmdb.database.MovieEntity;
+import at.ac.fhcampuswien.fhmdb.database.MovieRepository;
+import at.ac.fhcampuswien.fhmdb.database.WatchlistMovieEntity;
+import at.ac.fhcampuswien.fhmdb.database.WatchlistRepository;
+import at.ac.fhcampuswien.fhmdb.models.ClickEventHandler;
 import at.ac.fhcampuswien.fhmdb.models.Genre;
 import at.ac.fhcampuswien.fhmdb.models.Movie;
 import at.ac.fhcampuswien.fhmdb.models.SortedState;
-import at.ac.fhcampuswien.fhmdb.pattern.observer.Observable;
 import at.ac.fhcampuswien.fhmdb.pattern.observer.Observer;
-import at.ac.fhcampuswien.fhmdb.pattern.state.*;
+import at.ac.fhcampuswien.fhmdb.pattern.state.unsortedState;
+import at.ac.fhcampuswien.fhmdb.pattern.state.ascendingState;
+import at.ac.fhcampuswien.fhmdb.pattern.state.descendingState;
+import at.ac.fhcampuswien.fhmdb.pattern.state.State;
 import at.ac.fhcampuswien.fhmdb.ui.MovieCell;
 import com.google.gson.Gson;
 import com.jfoenix.controls.JFXButton;
@@ -21,18 +27,19 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
 
 import java.io.IOException;
 import java.net.URL;
-import java.sql.SQLException;
-import java.util.*;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.ResourceBundle;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
-import javafx.scene.control.Alert;
-import javafx.scene.control.ButtonType;
-import at.ac.fhcampuswien.fhmdb.models.ClickEventHandler;
 
 public class HomeController implements Initializable, Observer {
     @FXML
