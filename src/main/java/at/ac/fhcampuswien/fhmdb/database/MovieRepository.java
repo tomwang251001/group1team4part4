@@ -17,6 +17,7 @@ import java.util.List;
 
 public class MovieRepository {
     Dao<MovieEntity, Long> dao;
+    private static MovieRepository instance;
 
     public List<MovieEntity> getAllMovies() throws DatabaseException {
         try {
@@ -75,7 +76,7 @@ public class MovieRepository {
             throw new DatabaseException("error in addAllMovies", sqle);
         }
     }
-    public MovieRepository(){
+    private MovieRepository(){
         try {
             this.dao = Database.getDatabase().getMovieDao();
         }catch (DatabaseException dbe){
@@ -83,5 +84,12 @@ public class MovieRepository {
             errorAlert.show();
         }
 
+    }
+
+    public static MovieRepository getMovieRepository(){
+        if (instance == null) {
+            instance = new MovieRepository();
+        }
+        return instance;
     }
 }

@@ -21,7 +21,7 @@ import static org.junit.jupiter.api.Assertions.*;
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class MovieRepositoryTest {
     //Dao<MovieEntity, Long> dao;
-    MovieRepository movieRepository = new MovieRepository();
+    MovieRepository movieRepository = MovieRepository.getMovieRepository();
     List<Movie> movies = new ArrayList<>();
 
     @BeforeAll

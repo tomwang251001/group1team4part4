@@ -36,8 +36,9 @@ public class FhmdbApplication extends Application {
 
         try {
             if (Database.getDatabase() != null) {
-                new MovieRepository().removeAll();
-                new MovieRepository().addAllMovies(HomeController.allMovies);
+                MovieRepository movieRepository = MovieRepository.getMovieRepository();
+                movieRepository.removeAll();
+                movieRepository.addAllMovies(HomeController.allMovies);
             }
         }catch(DatabaseException dbe){
             Alert errorAlert = new Alert(Alert.AlertType.ERROR, "Error loading movies", ButtonType.OK);

@@ -68,7 +68,7 @@ public class HomeController implements Initializable, Observer {
     protected SortedState sortedState;
     protected manageState defaultSortState;
 
-    MovieRepository movieRepository = new MovieRepository();
+    MovieRepository movieRepository = MovieRepository.getMovieRepository();
     WatchlistRepository watchlistRepository = new WatchlistRepository();
 
     @Override
@@ -78,12 +78,13 @@ public class HomeController implements Initializable, Observer {
         errorAlert.show();
     }
 
+
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         initializeState();
         initializeLayout();
         watchlistRepository.registerObserver(this);
-        System.out.println(watchlistRepository.observers.size());
+        System.out.println(watchlistRepository.getObserversList());
     }
 
     public void initializeState() {

@@ -34,7 +34,7 @@ import java.util.stream.IntStream;
 
 public class WatchlistController extends HomeController implements Observer {
     WatchlistRepository watchlistRepository = new WatchlistRepository();
-    MovieRepository movieRepository = new MovieRepository();
+    MovieRepository movieRepository = MovieRepository.getMovieRepository();
 
     public void update(){};
 

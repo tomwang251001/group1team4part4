@@ -33,6 +33,10 @@ public class WatchlistRepository implements Observable {
         }
     }
 
+    public List<Observer> getObserversList(){
+        return observers;
+    }
+
 
     @Override
     public void registerObserver(Observer observer) {
@@ -46,7 +50,7 @@ public class WatchlistRepository implements Observable {
     }
     @Override
     public void notifyObservers(String msg){
-        System.out.println(observers.size());
+        System.out.println(observers);
         for (Observer observer : observers) {
             observer.update(msg);
         }
