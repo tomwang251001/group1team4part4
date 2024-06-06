@@ -3,19 +3,19 @@ package at.ac.fhcampuswien.fhmdb.pattern.state;
 import at.ac.fhcampuswien.fhmdb.models.Movie;
 import javafx.collections.ObservableList;
 
-public class manageState {
-    private defaultState currentState;
+public class ManageState {
+    private DefaultState currentState;
 
-    public manageState() {
-        this.currentState = new unsortedState();
+    public ManageState() {
+        this.currentState = new UnsortedState();
     }
 
-    public defaultState getCurrentState() {
+    public DefaultState getCurrentState() {
         return this.currentState;
     }
 
-    public void setCurrentState(defaultState currentState) {
-        this.currentState = currentState;
+    public void setCurrentState(DefaultState newState) {
+        this.currentState = newState;
     }
 
     public ObservableList<Movie> sort(ObservableList<Movie> observableMovies){

@@ -7,12 +7,11 @@ import at.ac.fhcampuswien.fhmdb.database.*;
 import at.ac.fhcampuswien.fhmdb.models.Genre;
 import at.ac.fhcampuswien.fhmdb.models.Movie;
 import at.ac.fhcampuswien.fhmdb.models.SortedState;
-import at.ac.fhcampuswien.fhmdb.pattern.observer.Observable;
 import at.ac.fhcampuswien.fhmdb.pattern.observer.Observer;
-import at.ac.fhcampuswien.fhmdb.pattern.state.ascendingState;
-import at.ac.fhcampuswien.fhmdb.pattern.state.defaultState;
-import at.ac.fhcampuswien.fhmdb.pattern.state.descendingState;
-import at.ac.fhcampuswien.fhmdb.pattern.state.manageState;
+import at.ac.fhcampuswien.fhmdb.pattern.state.AscendingState;
+import at.ac.fhcampuswien.fhmdb.pattern.state.DescendingState;
+import at.ac.fhcampuswien.fhmdb.pattern.state.ManageState;
+import at.ac.fhcampuswien.fhmdb.pattern.state.UnsortedState;
 import at.ac.fhcampuswien.fhmdb.ui.MovieCell;
 import com.google.gson.Gson;
 import com.jfoenix.controls.JFXButton;
@@ -29,7 +28,6 @@ import javafx.scene.layout.BorderPane;
 
 import java.io.IOException;
 import java.net.URL;
-import java.sql.SQLException;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -66,7 +64,7 @@ public class HomeController implements Initializable, Observer {
     protected ObservableList<Movie> observableMovies = FXCollections.observableArrayList();
 
     protected SortedState sortedState;
-    protected manageState defaultSortState;
+    protected ManageState manageState;
 
     MovieRepository movieRepository = MovieRepository.getMovieRepository();
     WatchlistRepository watchlistRepository = WatchlistRepository.getInstance();
@@ -110,7 +108,6 @@ public class HomeController implements Initializable, Observer {
         observableMovies.clear();
         observableMovies.addAll(allMovies); // add all movies to the observable list
         sortedState = SortedState.NONE;
-
     }
 
     public void initializeLayout() {
@@ -131,17 +128,10 @@ public class HomeController implements Initializable, Observer {
 
         ratingComboBox.setPromptText("Filter by Rating");
         ratingComboBox.getItems().addAll("No filter",1,2,3,4,5,6,7,8,9);
+
     }
     protected List<Movie> getObservableMovies() {
         return observableMovies;
-    }
-
-    public void sortMovies(){
-        if (sortedState == SortedState.NONE || sortedState == SortedState.DESCENDING) {
-            sortMovies(SortedState.ASCENDING);
-        } else if (sortedState == SortedState.ASCENDING) {
-            sortMovies(SortedState.DESCENDING);
-        }
     }
 
     public void setContentView(String pathToView){
@@ -180,28 +170,46 @@ public class HomeController implements Initializable, Observer {
     // sort movies based on sortedState
     // by default sorted state is NONE
     // afterwards it switches between ascending and descending
+    public ObservableList<Movie> sortAscending(ObservableList<Movie> observableMovies) {
+        manageState.setCurrentState(new AscendingState());
+        return manageState.sort(observableMovies);
+    }
+
+    public ObservableList<Movie> sortDescending(ObservableList<Movie> observableMovies) {
+        manageState.setCurrentState(new DescendingState());
+        return manageState.sort(observableMovies);
+    }
+
     public void sortMovies(SortedState sortDirection) {
         if (sortDirection == SortedState.ASCENDING) {
-            observableMovies.sort(Comparator.comparing(Movie::getTitle));
+            observableMovies = sortAscending(observableMovies);
             sortedState = SortedState.ASCENDING;
         } else {
-            observableMovies.sort(Comparator.comparing(Movie::getTitle).reversed());
+            observableMovies = sortDescending(observableMovies);
             sortedState = SortedState.DESCENDING;
         }
     }
-    //TODO try this in Code for GUI
-    public ObservableList<Movie> sortMovies(ObservableList<Movie> observableMovies, SortedState sortDirection){
-        if (sortDirection == SortedState.ASCENDING) {
-            defaultSortState.setCurrentState(new ascendingState());
-        } else {
-            defaultSortState.setCurrentState(new descendingState());
+    /*public void sortMovies(){
+        if (sortedState == SortedState.NONE || sortedState == SortedState.DESCENDING) {
+            sortMovies(SortedState.ASCENDING);
+        } else if (sortedState == SortedState.ASCENDING) {
+            sortMovies(SortedState.DESCENDING);
         }
-        return defaultSortState.sort(observableMovies);
+    }*/
+
+    public void sortMovies(){
+        //manageState.setCurrentState(new UnsortedState());
+        if (sortedState == SortedState.NONE || sortedState == SortedState.DESCENDING) {
+            sortedState = SortedState.ASCENDING;
+            observableMovies = sortAscending(observableMovies);
+        } else if (sortedState == SortedState.ASCENDING) {
+            sortedState = SortedState.DESCENDING;
+           observableMovies = sortDescending(observableMovies);
+        }
     }
 
     public void applyAllFilters(String searchQuery, Object genre, Object releaseYear, int rating) {
         List<Movie> filteredMovies;
-
 
         String genrefilter = null;
         try{
@@ -209,7 +217,6 @@ public class HomeController implements Initializable, Observer {
                 genrefilter = genre.toString();
             } else {genre = null;}
         }catch(Exception e){}
-
 
         int year = 0;
         try {
@@ -224,7 +231,6 @@ public class HomeController implements Initializable, Observer {
         } catch (Exception e) {
             rating = -1;
         }
-
 
         Gson gson = new Gson();
         try {
@@ -241,7 +247,6 @@ public class HomeController implements Initializable, Observer {
             observableMovies.clear();
             observableMovies.addAll(filteredMovies);
         }
-
     }
 
     public void searchBtnClicked(ActionEvent actionEvent) {
@@ -306,8 +311,6 @@ public class HomeController implements Initializable, Observer {
                 .collect(Collectors.toList());
     }
 
-
-
     public List<String> getTitle(List<Movie> movies){
         return movies.stream()
                 .map(Movie::getTitle)
@@ -322,7 +325,6 @@ public class HomeController implements Initializable, Observer {
         if (movies == null) {
             throw new IllegalArgumentException("movies must not be null");
         }
-        ;
 
         return movies.stream()
                 .filter(Objects::nonNull)

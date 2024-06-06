@@ -5,7 +5,7 @@ import javafx.collections.ObservableList;
 
 import java.util.Comparator;
 
-public class ascendingState implements defaultState {
+public class AscendingState implements DefaultState {
     @Override
     public ObservableList<Movie> sort(ObservableList<Movie> observableMovies) {
         observableMovies.sort(Comparator.comparing(Movie::getTitle));
