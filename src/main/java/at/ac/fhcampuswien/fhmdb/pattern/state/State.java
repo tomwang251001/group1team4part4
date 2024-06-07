@@ -6,6 +6,7 @@ import javafx.collections.ObservableList;
 
 
 public interface State {
+    String getBtnTxt();
     void changeState(HomeController controller);
     ObservableList<Movie> sort(ObservableList<Movie> observableMovies);
 }

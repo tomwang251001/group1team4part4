@@ -6,6 +6,12 @@ import javafx.collections.ObservableList;
 
 public class unsortedState implements State{
 
+    String btnTxt = "Sort";
+    @Override
+    public String getBtnTxt(){
+        return btnTxt;
+    }
+
     @Override
     public void changeState(HomeController controller){
         controller.changeState(new ascendingState());

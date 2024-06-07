@@ -31,9 +31,15 @@ public class MovieAPI {
     }
 
     public static String searchMovies(String query, String genre, int releaseYear, double ratingFrom) throws MovieApiException {
+        Genre g;
+        if (genre == null){
+            g = null;
+        }else{
+            g = Genre.valueOf(genre);
+        }
         urlBuilder builder = new urlBuilder();
         builder.setQuery(query)
-                .setGenre(Genre.valueOf(genre.toUpperCase()))
+                .setGenre(g)
                 .setReleaseYear(releaseYear)
                 .setRatingFrom((int) ratingFrom);
 

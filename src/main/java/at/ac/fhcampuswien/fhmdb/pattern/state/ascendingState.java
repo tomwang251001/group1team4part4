@@ -7,6 +7,12 @@ import javafx.collections.ObservableList;
 import java.util.Comparator;
 
 public class ascendingState implements State {
+
+    String btnTxt = "DES";
+    @Override
+    public String getBtnTxt(){
+        return btnTxt;
+    }
     @Override
     public void changeState(HomeController controller){
         controller.changeState(new descendingState());

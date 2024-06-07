@@ -8,6 +8,12 @@ import java.util.Collections;
 import java.util.Comparator;
 
 public class descendingState implements State{
+
+    String btnTxt = "ASC";
+    @Override
+    public String getBtnTxt(){
+        return btnTxt;
+    }
     @Override
     public void changeState(HomeController controller){
         controller.changeState(new ascendingState());

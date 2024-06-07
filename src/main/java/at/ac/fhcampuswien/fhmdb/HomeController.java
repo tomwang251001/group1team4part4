@@ -188,6 +188,7 @@ public class HomeController implements Initializable, Observer {
 
     public void sort(){
         currentState.changeState(this);
+        sortBtn.setText(currentState.getBtnTxt());
         currentState.sort(observableMovies);
     }
     public void changeState(State state){
@@ -200,14 +201,15 @@ public class HomeController implements Initializable, Observer {
 
 
         String genrefilter = null;
-        try{
-            if (!(genre.toString().equals("No filter") || genre.toString().equals("Filter by Genre"))){
-                genrefilter = genre.toString();
-            } else {genre = null;}
-        }catch(Exception e){}
+
+        if (genre != null){
+            System.out.println("hi");
+            genrefilter = genre.toString();
+        } else {genre = null;}
 
 
-        int year = 0;
+
+        int year;
         try {
             year = Integer.parseInt(releaseYear.toString());
         } catch (Exception e) {
@@ -252,7 +254,6 @@ public class HomeController implements Initializable, Observer {
         }
 
         applyAllFilters(searchQuery, genre, releaseYear, rating);
-        sort();
     }
 
     public void clearBtnClicked(ActionEvent actionEvent){
