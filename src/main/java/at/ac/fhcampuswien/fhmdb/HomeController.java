@@ -202,8 +202,7 @@ public class HomeController implements Initializable, Observer {
 
         String genrefilter = null;
 
-        if (genre != null){
-            System.out.println("hi");
+        if (genre != null && genre.toString() != "No filter"){
             genrefilter = genre.toString();
         } else {genre = null;}
 
